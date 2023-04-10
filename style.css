@@ -58,3 +58,42 @@ nav {
 #menu .material-symbols-outlined {
     margin: 4px;
 }
+
+/* ------------page content------------ */
+
+section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+#alert-container {}
+
+#game-tile-container {}
+
+#keyboard-container {
+    /* width: 32%; */
+    width: 490px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+#keyboard-container button {
+    width: 40px;
+    height: 48px;
+    border: none;
+    border-radius: 4px;
+    background-color: var(--lightGray);
+    font-weight: bold;
+    margin: 4px;
+}
+
+#keyboard-container button[value="ENTER"] {
+    width: 60px;
+}
+
+#keyboard-container button[value="⌫"] {
+    width: 60px;
+}
