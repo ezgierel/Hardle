@@ -1,0 +1,60 @@
+:root {
+    --clue: #c9b458;
+    --true: #6aaa64;
+    --lightGray: #d3d6da;
+    --darkGray: #787c7e;
+    --headerHeight: 60px;
+}
+
+body {
+    margin: 0;
+}
+
+
+/* ---------header--------- */
+
+header {
+    border-bottom: 1px solid var(--lightGray);
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    position: relative;
+    justify-content: space-between;
+    height: var(--headerHeight);
+}
+
+#title {
+    margin: 0;
+    position: absolute;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-family: 'Suwannaphum', serif;
+    font-size: 2rem;
+    pointer-events: none;
+}
+
+#menu {
+    position: absolute;
+    right: 0;
+    margin-right: 30px;
+}
+
+/* icons */
+
+.material-symbols-outlined {
+    color: black !important;
+    font-weight: bold !important;
+    font-size: 2rem !important;
+    cursor: pointer;
+}
+
+.material-symbols-outlined:first-child {
+    margin: 0 30px;
+}
+
+#menu .material-symbols-outlined {
+    margin: 4px;
+}
