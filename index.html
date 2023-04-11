@@ -17,6 +17,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Suwannaphum:wght@900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@900&display=swap" rel="stylesheet">
     <title>Hardle</title>
 </head>
 
@@ -27,7 +30,11 @@
     <header>
         <nav>
             <div>
-                <span class="material-symbols-outlined">code</span>
+                <a href="https://github.com/ezgierel/Hardle" target="_blank" id="source-code-link">
+                    <span class="material-symbols-outlined">code</span>
+                    <p id="tooltip-text">Source code</p>
+                </a>
+
             </div>
             <h1 id="title">Hardle</h1>
             <div id="menu">
@@ -46,7 +53,7 @@
 
     <section>
         <div id="alert-container"></div>
-        <div id="game-tile-container"></div>
+        <div id="word-board"></div>
         <div id="keyboard-container"></div>
     </section>
 

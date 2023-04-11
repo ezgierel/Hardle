@@ -4,6 +4,11 @@
     --lightGray: #d3d6da;
     --darkGray: #787c7e;
     --headerHeight: 60px;
+    --lightGrayTransparent: #d3d6da56;
+}
+
+* {
+    font-family: 'Noto Sans JP', sans-serif;
 }
 
 body {
@@ -59,6 +64,33 @@ nav {
     margin: 4px;
 }
 
+#source-code-link {
+    position: relative;
+}
+
+/* tooltip for github link */
+
+#tooltip-text {
+    visibility: hidden;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    position: absolute;
+    background-color: var(--lightGrayTransparent);
+    color: rgba(0, 0, 0, 0.677);
+    text-align: center;
+    border-radius: 3px;
+    width: 80px;
+    padding: 5px 0;
+    z-index: 1;
+    left: 50%;
+    margin-left: -38px;
+    top: 5px;
+}
+
+#source-code-link:hover #tooltip-text {
+    visibility: visible;
+}
+
 /* ------------page content------------ */
 
 section {
@@ -68,26 +100,50 @@ section {
 
 }
 
-#alert-container {}
+#alert-container {
+    height: 30px;
+}
 
-#game-tile-container {}
+/* word board */
+
+#word-board {
+    margin-top: 40px;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+}
+
+.letter {
+    width: 50px;
+    height: 50px;
+    border: 2px solid var(--lightGray);
+    margin: 2px;
+    text-align: center;
+    font-size: 2rem;
+}
+
+/* keyboard */
 
 #keyboard-container {
-    /* width: 32%; */
-    width: 490px;
+    width: 540px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    margin-top: 40px;
 }
 
+
 #keyboard-container button {
-    width: 40px;
-    height: 48px;
+    width: 45px;
+    height: 52px;
     border: none;
     border-radius: 4px;
     background-color: var(--lightGray);
     font-weight: bold;
     margin: 4px;
+    cursor: pointer;
 }
 
 #keyboard-container button[value="ENTER"] {
