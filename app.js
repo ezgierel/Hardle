@@ -1,5 +1,8 @@
 const gameBoard = document.getElementById("word-board");
 const keyboard = document.getElementById("keyboard-container");
+const helpButton = document.getElementById("help");
+const helpContainer = document.getElementById("help-container");
+
 // const answer = "SCENT";
 
 let currentRow = 0;
@@ -57,7 +60,7 @@ function handleClick(key) {
 
 //keyboard keyup functions
 
-document.addEventListener("keyup", handleKeyUp)
+document.addEventListener("keyup", handleKeyUp);
 
 function handleKeyUp(evt) {
     var keyCode = evt.keyCode;
@@ -105,3 +108,22 @@ function deleteLetter() {
     guesses[currentRow][currentLetter] = '';
     currentBox.style.borderColor = "#d3d6da";
 }
+
+
+//opening and closing "how to play" modal box
+
+helpButton.addEventListener("click", () => {
+    if (helpContainer.style.display != "block") {
+        helpContainer.style.display = "block";
+    } else {
+        helpContainer.style.display = "none";
+    }
+})
+
+window.onclick = function (evt) {
+    if (evt.target == helpContainer) {
+        helpContainer.style.display = "none";
+    }
+}
+
+

@@ -8,12 +8,6 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Suwannaphum:wght@900&display=swap" rel="stylesheet">
@@ -38,11 +32,11 @@
             </div>
             <h1 id="title">Hardle</h1>
             <div id="menu">
-                <span class="material-symbols-outlined">
-                    info
-                </span><span class="material-symbols-outlined">
+                <span class="material-symbols-outlined" id="help">
+                    help
+                </span><span class="material-symbols-outlined" id="stats">
                     leaderboard
-                </span><span class="material-symbols-outlined">
+                </span><span class="material-symbols-outlined" id="settings">
                     settings
                 </span>
             </div>
@@ -56,6 +50,58 @@
         <div id="word-board"></div>
         <div id="keyboard-container"></div>
     </section>
+
+    <div id="help-container" class="modal">
+        <div id="help-content">
+            <span class="material-symbols-outlined close">
+                close
+            </span>
+            <h2>How To Play</h2>
+            <h4>Wordle Hard Mode</h4>
+            <h6>Guess the word in 6 tries</h6>
+            <ul id="rules-list">
+                <li>If you find a correct spot for any letter, you must use that letter in that spot for your next
+                    guess.</li>
+                <li>Each guess must be a 5 letter valid word.</li>
+                <li>Tile colors will give you clues about the word.</li>
+            </ul>
+            <!-- <p>If you find a correct spot for any letter, you must use that letter in that spot for your next guess.
+            </p>
+            <p>Each guess must be a 5 letter valid word.</p>
+            <p>Tile colors will give you clues about the word.</p> -->
+
+            <div id="example-container">
+                <h4>Examples</h4>
+                <div class="example-row">
+                    <div class="example-tile correct-spot">C</div>
+                    <div class="example-tile">L</div>
+                    <div class="example-tile">O</div>
+                    <div class="example-tile">S</div>
+                    <div class="example-tile">E</div>
+                </div>
+                <p><span style="font-weight: bold;">C</span> is in the word and in the correct spot.</p>
+                <div class="example-row">
+                    <div class="example-tile">S</div>
+                    <div class="example-tile">T</div>
+                    <div class="example-tile">A</div>
+                    <div class="example-tile wrong-spot">I</div>
+                    <div class="example-tile">N</div>
+                </div>
+                <p><span style="font-weight: bold;">I</span> is in the word but in another spot.</p>
+                <div class="example-row">
+                    <div class="example-tile">W</div>
+                    <div class="example-tile">O</div>
+                    <div class="example-tile not-in-word">R</div>
+                    <div class="example-tile">D</div>
+                    <div class="example-tile">S</div>
+                </div>
+                <p><span style="font-weight: bold;">R</span> is not in the word.</p>
+            </div>
+        </div>
+    </div>
+    <div id="settings-container" class="modal">
+        <div id="settings-content"></div>
+    </div>
 
 
     <script src="app.js"></script>
