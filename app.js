@@ -101,39 +101,40 @@ function handleKeyUp(evt) {
 //typing functions
 function typeLetter(letter) {
     const currentBox = document.getElementById(`row-${currentRow}-char-${currentLetter}`);
-    if (currentBox.textContent == "") {
+    if (currentLetter < 5) {
         currentBox.textContent = letter.toUpperCase();
         currentBox.value = letter.toUpperCase();
+        currentBox.setAttribute("data", letter.toUpperCase());
         guesses[currentRow][currentLetter] = letter.toUpperCase();
 
+        //if dark theme on
         if (!darkThemeButton.checked) {
             currentBox.style.borderColor = "black";
             currentBox.style.transition = "border 0.5s";
         }
-    }
-    if (currentLetter < 4) {
         currentLetter += 1;
     }
 }
 
 function deleteLetter() {
-    //since current letter is empty box, get previous letter if it's not the last box
-    //if it's the last box, get previous letter if box is already empty
+
     //if it's the first box, do not get the previous letter
-    if (currentLetter > 0 && currentLetter !== 4) {
-        currentLetter -= 1;
-    } else if (currentLetter === 4 && guesses[currentRow][currentLetter] === '') {
+    if (currentLetter > 0) {
         currentLetter -= 1;
     }
 
     const currentBox = document.getElementById(`row-${currentRow}-char-${currentLetter}`);
     currentBox.textContent = '';
     currentBox.value = '';
+    currentBox.removeAttribute("data");
     guesses[currentRow][currentLetter] = '';
     if (!darkThemeButton.checked) {
         currentBox.style.borderColor = "#d3d6da";
     }
+}
 
+function checkWord() {
+    //check word
 }
 
 
@@ -170,7 +171,7 @@ closeButtons.forEach(close => {
 
 })
 
-//settings
+//----------settings--------s
 //dark theme
 darkThemeButton.addEventListener("change", () => {
     const keyButtons = document.querySelectorAll("button");
@@ -276,8 +277,12 @@ darkThemeButton.addEventListener("change", () => {
 
         //game-tiles
         gameTiles.forEach(tile => {
-            tile.style.borderColor = lightGray;
             tile.style.color = "black";
+            if (tile.getAttribute("data") === null) {
+                tile.style.borderColor = lightGray;
+            } else {
+                tile.style.borderColor = "black";
+            }
         })
     }
 })

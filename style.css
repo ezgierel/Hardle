@@ -139,6 +139,7 @@ section {
     flex-wrap: wrap;
     justify-content: center;
     margin-top: 40px;
+    user-select: none;
 }
 
 
