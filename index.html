@@ -34,11 +34,12 @@
             <div id="menu">
                 <span class="material-symbols-outlined" id="help">
                     help
-                </span><span class="material-symbols-outlined" id="stats">
-                    leaderboard
                 </span><span class="material-symbols-outlined" id="settings">
                     settings
                 </span>
+                <!-- <span class="material-symbols-outlined" id="stats">
+                    leaderboard
+                </span> -->
             </div>
         </nav>
     </header>
@@ -51,27 +52,27 @@
         <div id="keyboard-container"></div>
     </section>
 
+
+    <!-- ----------menu modals------------ -->
+
+    <!-- how to play -->
+
     <div id="help-container" class="modal">
-        <div id="help-content">
-            <span class="material-symbols-outlined close">
+        <div id="help-content" class="modal-content">
+            <span class="material-symbols-outlined close" id="close-help-modal">
                 close
             </span>
-            <h2>How To Play</h2>
-            <h4>Wordle Hard Mode</h4>
-            <h6>Guess the word in 6 tries</h6>
+            <h2 class="header">How To Play</h2>
+            <h4 class="header">Wordle Hard Mode</h4>
+            <h6 class="header">Guess the word in 6 tries</h6>
             <ul id="rules-list">
                 <li>If you find a correct spot for any letter, you must use that letter in that spot for your next
                     guess.</li>
                 <li>Each guess must be a 5 letter valid word.</li>
                 <li>Tile colors will give you clues about the word.</li>
             </ul>
-            <!-- <p>If you find a correct spot for any letter, you must use that letter in that spot for your next guess.
-            </p>
-            <p>Each guess must be a 5 letter valid word.</p>
-            <p>Tile colors will give you clues about the word.</p> -->
-
             <div id="example-container">
-                <h4>Examples</h4>
+                <h4 class="header">Examples</h4>
                 <div class="example-row">
                     <div class="example-tile correct-spot">C</div>
                     <div class="example-tile">L</div>
@@ -99,8 +100,37 @@
             </div>
         </div>
     </div>
+
+    <!-- settings -->
+
     <div id="settings-container" class="modal">
-        <div id="settings-content"></div>
+        <div id="settings-content" class="modal-content">
+            <span class="material-symbols-outlined close" id="close-settings-modal">
+                close
+            </span>
+            <h2 class="header">Settings</h2>
+            <div class="setting-row">
+                <p>Dark Theme</p>
+                <label class="switch">
+                    <input type="checkbox" id="dark-theme">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="setting-row">
+                <p>High Contrast Mode</p>
+                <label class="switch">
+                    <input type="checkbox" id="high-contrast">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="setting-row">
+                <p>Speedrun</p>
+                <label class="switch">
+                    <input type="checkbox" id="speedrun">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </div>
     </div>
 
 
