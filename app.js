@@ -21,14 +21,15 @@ const icons = document.querySelectorAll(".material-symbols-outlined");
 const alertContainer = document.getElementById("alert-container");
 
 //------colors-------
-let whiteish = "#FAF9F6";
-let blackish = "#121212";
-let darkGray = "#787c7e";
-let lightGray = "#d3d6da";
-let correct = "#6aaa64";
-let clue = "#c9b458";
-let modalBackground = "#d9d9d96e";
-let modalBackgroundDark = "#0000004b";
+// let whiteish = "#FAF9F6";
+// let blackish = "#121212";
+// let darkGray = "#787c7e";
+// let lightGray = "#d3d6da";
+// let correct = "#6aaa64";
+// let clue = "#c9b458";
+// let modalBackground = "#d9d9d96e";
+// let modalBackgroundDark = "#0000004b";
+// let darkerGray = "#3a3a3c";
 const answer = "SCENT";
 
 let currentRow = 0;
@@ -54,21 +55,26 @@ guesses.forEach((row, rowIndex) => {
     rowContainer.classList.add('row');
 
     row.forEach((letter, letterIndex) => {
-        const letterContainer = document.createElement("span");
-        letterContainer.id = `row-${rowIndex}-char-${letterIndex}`;
-        letterContainer.classList.add('letter');
-        rowContainer.append(letterContainer);
+        const tile = document.createElement("span");
+        tile.id = `row-${rowIndex}-char-${letterIndex}`;
+        tile.classList.add('letter');
+        if (darkThemeButton.checked) {
+            tile.classList.add("dark-mode-empty-tile");
+        } else {
+            tile.classList.add("empty-tile");
+        }
+        rowContainer.append(tile);
     });
-
     gameBoard.append(rowContainer);
 });
-
 
 //set keyboard and add click event listener
 keys.forEach(key => {
     const keyboardButton = document.createElement('button');
     keyboardButton.textContent = key;
+    keyboardButton.id = key;
     keyboardButton.value = key;
+    keyboardButton.classList.add("key-not-colored");
     keyboardButton.addEventListener('click', () => handleClick(key));
     keyboard.append(keyboardButton);
 })
@@ -110,10 +116,15 @@ function typeLetter(letter) {
         currentBox.setAttribute("data", letter.toUpperCase());
         guesses[currentRow][currentLetter] = letter.toUpperCase();
 
-        //if dark theme on
-        if (!darkThemeButton.checked) {
-            currentBox.style.borderColor = "black";
-            currentBox.style.transition = "border 0.5s";
+        currentBox.classList.remove("dark-mode-empty-tile");
+        currentBox.classList.remove("empty-tile");
+
+        if (darkThemeButton.checked) {
+            currentBox.classList.remove("typing");
+            currentBox.classList.add("dark-mode-typing");
+        } else {
+            currentBox.classList.remove("dark-mode-typing");
+            currentBox.classList.add("typing");
         }
         currentLetter += 1;
     }
@@ -127,14 +138,18 @@ function deleteLetter() {
         if (currentLetter > 0) {
             currentLetter -= 1;
         }
-
         const currentBox = document.getElementById(`row-${currentRow}-char-${currentLetter}`);
         currentBox.textContent = '';
         currentBox.value = '';
         currentBox.removeAttribute("data");
         guesses[currentRow][currentLetter] = '';
-        if (!darkThemeButton.checked) {
-            currentBox.style.borderColor = "#d3d6da";
+        currentBox.classList.remove("typing");
+        currentBox.classList.remove("dark-mode-typing");
+
+        if (darkThemeButton.checked) {
+            currentBox.classList.add("dark-mode-empty-row");
+        } else {
+            currentBox.classList.add("empty-tile");
         }
     }
 }
@@ -147,10 +162,9 @@ function checkWord() {
             showMessage(currentRow);
             isGameOver = true;
             currentGuessBoxes.forEach(guess => {
-                guess.style.borderColor = correct;
-                guess.style.backgroundColor = correct;
-                guess.style.transition = "none";
-                guess.style.color = "white";
+                guess.classList.remove("typing");
+                guess.classList.remove("dark-mode-typing");
+                guess.classList.add("correct");
                 return;
             })
         } else {
@@ -172,17 +186,29 @@ function checkWord() {
             }
             if (currentRow <= 5) {
                 currentGuessBoxes.forEach((guess, guessIndex) => {
+                    const currentKey = document.querySelector(`#keyboard-container #${guess.getAttribute("data")}`);
+                    guess.classList.remove("typing");
+                    guess.classList.remove("dark-mode-typing");
+                    currentKey.classList.remove("key-not-colored");
+                    currentKey.classList.remove("dm-key-not-colored");
+
                     if (answer.includes(guess.getAttribute("data"))) {
-                        guess.style.backgroundColor = clue;
-                        guess.style.borderColor = clue;
-                        guess.style.color = "white";
-                        guess.style.transition = "none";
-                        guess.value = "clue";
+                        guess.classList.add("clue");
+                        currentKey.classList.add("clue");
+                    } else {
+                        if (darkThemeButton.checked) {
+                            guess.classList.add("dark-mode-not-in-word");
+                            currentKey.classList.add("dark-mode-not-in-word");
+                        } else {
+                            guess.classList.add("not-in-word");
+                            currentKey.classList.add("not-in-word");
+                        }
                     }
                     if (guess.getAttribute("data") == answer[guessIndex]) {
-                        guess.style.backgroundColor = correct;
-                        guess.style.borderColor = correct;
-                        guess.value = "correct";
+                        guess.classList.remove("clue");
+                        currentKey.classList.remove("clue");
+                        guess.classList.add("correct");
+                        currentKey.classList.add("correct");
                     }
                 })
 
@@ -222,7 +248,7 @@ function showMessage(currentRow) {
             messageContent.textContent = "Phew";
             break;
         case "alert":
-            messageContent.textContent = "You must use the correct letter(s)";
+            messageContent.textContent = "Correct letters must be used";
             break;
         default:
             messageContent.textContent = "Game Over";
@@ -317,14 +343,26 @@ darkThemeButton.addEventListener("change", () => {
 
         //keyboard
         keyButtons.forEach(key => {
-            key.style.backgroundColor = darkGray;
-            key.style.color = whiteish;
+            if (key.classList.contains("key-not-colored")) {
+                key.classList.remove("key-not-colored");
+                key.classList.add("dm-key-not-colored");
+            } else if (key.classList.contains("not-in-word")) {
+                key.classList.remove("not-in-word");
+                key.classList.add("dark-mode-not-in-word");
+            }
         })
 
         //game-tiles
         gameTiles.forEach(tile => {
-            tile.style.borderColor = darkGray;
-            tile.style.color = whiteish;
+            if (tile.getAttribute("data") == null) {
+                tile.classList.remove("empty-tile");
+                tile.classList.add("dark-mode-empty-tile")
+            } else {
+                if (tile.classList.contains("not-in-word")) {
+                    tile.classList.remove("not-in-word");
+                    tile.classList.add("dark-mode-not-in-word");
+                }
+            }
         })
 
 
@@ -369,17 +407,25 @@ darkThemeButton.addEventListener("change", () => {
 
         //keyboard
         keyButtons.forEach(key => {
-            key.style.backgroundColor = lightGray;
-            key.style.color = "black";
+            if (key.classList.contains("dm-key-not-colored")) {
+                key.classList.remove("dm-key-not-colored");
+                key.classList.add("key-not-colored");
+            } else if (key.classList.contains("dark-mode-not-in-word")) {
+                key.classList.remove("dark-mode-not-in-word");
+                key.classList.add("not-in-word");
+            }
         })
 
         //game-tiles
         gameTiles.forEach(tile => {
-            tile.style.color = "black";
             if (tile.getAttribute("data") === null) {
-                tile.style.borderColor = lightGray;
+                tile.classList.remove("dark-mode-empty-tile");
+                tile.classList.add("empty-tile");
             } else {
-                tile.style.borderColor = "black";
+                if (tile.classList.contains("dark-mode-not-in-word")) {
+                    tile.classList.remove("dark-mode-not-in-word");
+                    tile.classList.add("not-in-word");
+                }
             }
         })
 

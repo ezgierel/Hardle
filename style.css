@@ -1,6 +1,6 @@
 :root {
     --clue: #c9b458;
-    --true: #6aaa64;
+    --correct: #6aaa64;
     --lightGray: #d3d6da;
     --darkGray: #787c7e;
     --headerHeight: 60px;
@@ -9,6 +9,8 @@
     --modalBackgroundDark: #0000004b;
     --blackish: #121212;
     --blackishTransparent: #121212ac;
+    --darkerGray: #3a3a3c;
+    --whiteish: #FAF9F6;
 }
 
 /* * {
@@ -113,6 +115,10 @@ section {
     align-items: center;
     margin-top: 20px;
     height: 40px;
+    position: fixed;
+    height: fit-content;
+    top: 70px;
+    z-index: 1;
 }
 
 #alert-container p {
@@ -123,14 +129,15 @@ section {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-weight: bold;
     font-size: 0.9rem;
-    padding: 5px 10px;
+    padding: 10px 15px;
+    margin: 2px;
     border-radius: 6px;
 }
 
 /* word board */
 
 #word-board {
-    margin-top: 25px;
+    margin-top: 90px;
     user-select: none;
 }
 
@@ -166,7 +173,6 @@ section {
     height: 52px;
     border: none;
     border-radius: 4px;
-    background-color: var(--lightGray);
     font-weight: bold;
     margin: 4px;
     cursor: pointer;
@@ -278,26 +284,6 @@ section {
     text-align: center;
 }
 
-/* coloring */
-
-.correct-spot {
-    background-color: var(--true);
-    border-color: var(--true);
-    color: white !important;
-}
-
-.wrong-spot {
-    background-color: var(--clue);
-    border-color: var(--clue);
-    color: white !important;
-}
-
-.not-in-word {
-    background-color: var(--darkGray);
-    border-color: var(--darkGray);
-    color: white !important;
-}
-
 /* settings menu */
 .setting-row {
     user-select: none;
@@ -338,7 +324,7 @@ section {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: var(--darkGray);
+    background-color: var(--darkGray) !important;
     -webkit-transition: .4s;
     transition: .4s;
 }
@@ -375,4 +361,63 @@ input:checked+.slider:before {
 
 .slider.round:before {
     border-radius: 50%;
+}
+
+/* coloring */
+
+.correct {
+    background-color: var(--correct) !important;
+    border-color: var(--correct) !important;
+    color: white !important;
+    transition: none;
+}
+
+.clue {
+    background-color: var(--clue) !important;
+    border-color: var(--clue) !important;
+    color: white !important;
+    transition: none;
+}
+
+.not-in-word {
+    background-color: var(--darkGray) !important;
+    border-color: var(--darkGray) !important;
+    color: white !important;
+    transition: none;
+}
+
+.dark-mode-not-in-word {
+    background-color: var(--darkerGray) !important;
+    border-color: var(--darkerGray) !important;
+    color: var(--whiteish) !important;
+}
+
+.empty-tile {
+    border-color: var(--lightGray);
+    color: black;
+}
+
+.dark-mode-empty-tile {
+    border-color: var(--darkGray);
+    color: var(--whiteisht);
+}
+
+.typing {
+    border-color: black !important;
+    transition: all 0.5s;
+}
+
+.dark-mode-typing {
+    color: var(--whiteish);
+    border-color: var(--darkGray);
+}
+
+.key-not-colored {
+    background-color: var(--lightGray) !important;
+    color: black;
+}
+
+.dm-key-not-colored {
+    background-color: var(--darkGray) !important;
+    color: var(--whiteish);
 }
