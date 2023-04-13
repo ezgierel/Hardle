@@ -18,6 +18,7 @@ const headers = document.querySelectorAll(".header");
 const list = document.querySelector("#rules-list");
 const examples = document.querySelectorAll(".example-tile");
 const icons = document.querySelectorAll(".material-symbols-outlined");
+const alertContainer = document.getElementById("alert-container");
 
 //------colors-------
 let whiteish = "#FAF9F6";
@@ -28,13 +29,14 @@ let correct = "#6aaa64";
 let clue = "#c9b458";
 let modalBackground = "#d9d9d96e";
 let modalBackgroundDark = "#0000004b";
-// const answer = "SCENT";
+const answer = "SCENT";
 
 let currentRow = 0;
 let currentLetter = 0;
+let isGameOver = false;
+let isSetMessage = false;
 
 //set array for keyboard and each guesses so js can create buttons and tiles
-
 const keys = ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '⌫'];
 const guesses = [
     ['', '', '', '', ''],
@@ -72,18 +74,18 @@ keys.forEach(key => {
 })
 
 //screen-keyboard click functions
-
 function handleClick(key) {
     var letter = key;
     if (key != "ENTER" && key != "⌫") {
         typeLetter(letter);
     } else if (key === "⌫") {
         deleteLetter();
+    } else if (key === "ENTER") {
+        checkWord();
     }
 }
 
 //keyboard keyup functions
-
 document.addEventListener("keyup", handleKeyUp);
 
 function handleKeyUp(evt) {
@@ -92,13 +94,14 @@ function handleKeyUp(evt) {
     //keycodes for letters and 222 is for Turkish keyboard i
     if ((keyCode >= 65 && keyCode <= 90) || (keyCode === 222)) {
         typeLetter(letter);
-    }
-    if (keyCode === 8) {
+    } else if (keyCode === 8) {
         deleteLetter();
+    } else if (keyCode === 13) {
+        checkWord();
     }
 }
 
-//typing functions
+//--------------typing functions----------
 function typeLetter(letter) {
     const currentBox = document.getElementById(`row-${currentRow}-char-${currentLetter}`);
     if (currentLetter < 5) {
@@ -117,24 +120,119 @@ function typeLetter(letter) {
 }
 
 function deleteLetter() {
+    if (isGameOver) {
+        return;
+    } else {
+        //if it's the first box, do not get the previous letter
+        if (currentLetter > 0) {
+            currentLetter -= 1;
+        }
 
-    //if it's the first box, do not get the previous letter
-    if (currentLetter > 0) {
-        currentLetter -= 1;
-    }
-
-    const currentBox = document.getElementById(`row-${currentRow}-char-${currentLetter}`);
-    currentBox.textContent = '';
-    currentBox.value = '';
-    currentBox.removeAttribute("data");
-    guesses[currentRow][currentLetter] = '';
-    if (!darkThemeButton.checked) {
-        currentBox.style.borderColor = "#d3d6da";
+        const currentBox = document.getElementById(`row-${currentRow}-char-${currentLetter}`);
+        currentBox.textContent = '';
+        currentBox.value = '';
+        currentBox.removeAttribute("data");
+        guesses[currentRow][currentLetter] = '';
+        if (!darkThemeButton.checked) {
+            currentBox.style.borderColor = "#d3d6da";
+        }
     }
 }
 
 function checkWord() {
-    //check word
+    if (currentLetter === 5) {
+        const currentGuess = guesses[currentRow].join("");
+        const currentGuessBoxes = document.querySelectorAll(`#row-${currentRow} .letter`);
+        if (answer === currentGuess) {
+            showMessage(currentRow);
+            isGameOver = true;
+            currentGuessBoxes.forEach(guess => {
+                guess.style.borderColor = correct;
+                guess.style.backgroundColor = correct;
+                guess.style.transition = "none";
+                guess.style.color = "white";
+                return;
+            })
+        } else {
+            //check if word is valid
+
+            //check if correct guesses used
+            currentGuessBoxes.forEach((guess, guessIndex) => {
+                const previous = document.getElementById(`row-${currentRow - 1}-char-${guessIndex}`);
+                if (currentRow != 0 && previous.value == "correct" && previous.getAttribute("data") != guess.getAttribute("data")) {
+                    isSetMessage = true;
+                }
+            })
+
+            //if correct guess not used in that place, return
+            if (isSetMessage) {
+                showMessage("alert");
+                isSetMessage = false;
+                return;
+            }
+            if (currentRow <= 5) {
+                currentGuessBoxes.forEach((guess, guessIndex) => {
+                    if (answer.includes(guess.getAttribute("data"))) {
+                        guess.style.backgroundColor = clue;
+                        guess.style.borderColor = clue;
+                        guess.style.color = "white";
+                        guess.style.transition = "none";
+                        guess.value = "clue";
+                    }
+                    if (guess.getAttribute("data") == answer[guessIndex]) {
+                        guess.style.backgroundColor = correct;
+                        guess.style.borderColor = correct;
+                        guess.value = "correct";
+                    }
+                })
+
+                //check if game is lost
+                if (currentRow === 5) {
+                    isGameOver = true;
+                    showMessage();
+                    return;
+                } else {
+                    currentRow += 1;
+                    currentLetter = 0;
+                }
+            }
+        }
+    }
+}
+
+function showMessage(currentRow) {
+    const messageContent = document.createElement("p");
+    switch (currentRow) {
+        case 0:
+            messageContent.textContent = "Genius";
+            break;
+        case 1:
+            messageContent.textContent = "Magnificent";
+            break;
+        case 2:
+            messageContent.textContent = "Impressive";
+            break;
+        case 3:
+            messageContent.textContent = "Splendid";
+            break;
+        case 4:
+            messageContent.textContent = "Great";
+            break;
+        case 5:
+            messageContent.textContent = "Phew";
+            break;
+        case "alert":
+            messageContent.textContent = "You must use the correct letter(s)";
+            break;
+        default:
+            messageContent.textContent = "Game Over";
+    }
+    alertContainer.append(messageContent);
+    if (darkThemeButton.checked) {
+        messageContent.style.backgroundColor = whiteish;
+        messageContent.style.color = blackish;
+    }
+    setTimeout(() => { alertContainer.removeChild(messageContent) }, 2000);
 }
 
 
@@ -284,6 +382,7 @@ darkThemeButton.addEventListener("change", () => {
                 tile.style.borderColor = "black";
             }
         })
+
     }
 })
 

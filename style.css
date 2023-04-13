@@ -8,6 +8,7 @@
     --modalBackground: #d9d9d96e;
     --modalBackgroundDark: #0000004b;
     --blackish: #121212;
+    --blackishTransparent: #121212ac;
 }
 
 /* * {
@@ -106,13 +107,30 @@ section {
 }
 
 #alert-container {
-    height: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    height: 40px;
+}
+
+#alert-container p {
+    background-color: var(--blackishTransparent);
+    color: white;
+    margin: 0;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: bold;
+    font-size: 0.9rem;
+    padding: 5px 10px;
+    border-radius: 6px;
 }
 
 /* word board */
 
 #word-board {
-    margin-top: 40px;
+    margin-top: 25px;
     user-select: none;
 }
 
