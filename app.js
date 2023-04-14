@@ -8,6 +8,7 @@ const closeButtonCollection = document.getElementsByClassName("close");
 //Change HTML colletion to array to use for each function
 const closeButtons = Array.prototype.slice.call(closeButtonCollection);
 const darkThemeButton = document.getElementById("dark-theme");
+const speedrunButton = document.getElementById("speedrun");
 const body = document.querySelector("body");
 const header = document.querySelector("header");
 const title = document.getElementById("title");
@@ -21,14 +22,14 @@ const icons = document.querySelectorAll(".material-symbols-outlined");
 const alertContainer = document.getElementById("alert-container");
 
 //------colors-------
-// let whiteish = "#FAF9F6";
-// let blackish = "#121212";
+let whiteish = "#FAF9F6";
+let blackish = "#121212";
 // let darkGray = "#787c7e";
-// let lightGray = "#d3d6da";
+let lightGray = "#d3d6da";
 // let correct = "#6aaa64";
 // let clue = "#c9b458";
-// let modalBackground = "#d9d9d96e";
-// let modalBackgroundDark = "#0000004b";
+let modalBackground = "#d9d9d96e";
+let modalBackgroundDark = "#0000004b";
 // let darkerGray = "#3a3a3c";
 const answer = "SCENT";
 
@@ -172,9 +173,16 @@ function checkWord() {
 
             //check if correct guesses used
             currentGuessBoxes.forEach((guess, guessIndex) => {
-                const previous = document.getElementById(`row-${currentRow - 1}-char-${guessIndex}`);
-                if (currentRow != 0 && previous.value == "correct" && previous.getAttribute("data") != guess.getAttribute("data")) {
-                    isSetMessage = true;
+
+                if (currentRow != 0) {
+                    const previous = document.getElementById(`row-${currentRow - 1}-char-${guessIndex}`);
+                    if (previous.classList.contains("correct") && previous.getAttribute("data") != guess.getAttribute("data")) {
+                        isSetMessage = true;
+                    }
+                } else {
+                    if (!speedrunButton.checked) {
+                        speedrunButton.disabled = true;
+                    }
                 }
             })
 
@@ -314,7 +322,7 @@ darkThemeButton.addEventListener("change", () => {
 
         //modal container
         modalContents.forEach(modal => {
-            modal.style.backgroundColor = "black";
+            modal.style.backgroundColor = blackish;
             modal.style.boxShadow = `0 0 18px black`;
         })
 
@@ -334,6 +342,10 @@ darkThemeButton.addEventListener("change", () => {
         //example tiles
         examples.forEach(tile => {
             tile.style.color = whiteish;
+            if (tile.classList.contains("not-in-word")) {
+                tile.classList.remove("not-in-word");
+                tile.classList.add("dark-mode-not-in-word");
+            }
         })
 
         //icons
@@ -398,6 +410,10 @@ darkThemeButton.addEventListener("change", () => {
         //example tiles
         examples.forEach(tile => {
             tile.style.color = "black";
+            if (tile.classList.contains("dark-mode-not-in-word")) {
+                tile.classList.remove("dark-mode-not-in-word");
+                tile.classList.add("not-in-word");
+            }
         })
 
         //icons

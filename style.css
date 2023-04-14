@@ -342,11 +342,11 @@ section {
 }
 
 input:checked+.slider {
-    background-color: var(--true);
+    background-color: var(--correct) !important;
 }
 
 input:focus+.slider {
-    box-shadow: 0 0 1px var(--true);
+    box-shadow: 0 0 1px var(--correct) !important;
 }
 
 input:checked+.slider:before {
