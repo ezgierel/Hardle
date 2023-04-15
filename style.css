@@ -13,6 +13,20 @@
     --whiteish: #FAF9F6;
 }
 
+@keyframes flipping {
+    0% {
+        transform: rotateX(0deg);
+    }
+
+    50% {
+        transform: rotateX(90deg);
+    }
+
+    100% {
+        transform: rotateX(0deg);
+    }
+}
+
 /* * {
     font-family: 'Noto Sans JP', sans-serif;
 } */
@@ -420,4 +434,10 @@ input:checked+.slider:before {
 .dm-key-not-colored {
     background-color: var(--darkGray) !important;
     color: var(--whiteish);
+}
+
+/* flip game tiles */
+
+.flip {
+    animation: 0.5s linear flipping;
 }

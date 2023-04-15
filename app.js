@@ -160,14 +160,21 @@ function checkWord() {
         const currentGuess = guesses[currentRow].join("");
         const currentGuessBoxes = document.querySelectorAll(`#row-${currentRow} .letter`);
         if (answer === currentGuess) {
-            showMessage(currentRow);
-            isGameOver = true;
-            currentGuessBoxes.forEach(guess => {
-                guess.classList.remove("typing");
-                guess.classList.remove("dark-mode-typing");
-                guess.classList.add("correct");
-                return;
+
+            currentGuessBoxes.forEach((guess, guessIndex) => {
+                setTimeout(() => {
+                    guess.classList.add("flip");
+                    guess.classList.remove("typing");
+                    guess.classList.remove("dark-mode-typing");
+                    guess.classList.add("correct");
+                }, 400 * guessIndex);
             })
+            setTimeout(() => {
+                showMessage(currentRow);
+                isGameOver = true;
+            }, 2500);
+            return;
+
         } else {
             //check if word is valid
 
@@ -197,27 +204,37 @@ function checkWord() {
                     const currentKey = document.querySelector(`#keyboard-container #${guess.getAttribute("data")}`);
                     guess.classList.remove("typing");
                     guess.classList.remove("dark-mode-typing");
-                    currentKey.classList.remove("key-not-colored");
-                    currentKey.classList.remove("dm-key-not-colored");
-
-                    if (answer.includes(guess.getAttribute("data"))) {
-                        guess.classList.add("clue");
-                        currentKey.classList.add("clue");
-                    } else {
-                        if (darkThemeButton.checked) {
-                            guess.classList.add("dark-mode-not-in-word");
-                            currentKey.classList.add("dark-mode-not-in-word");
+                    setTimeout(() => {
+                        guess.classList.add("flip");
+                        if (guess.getAttribute("data") == answer[guessIndex]) {
+                            guess.classList.add("correct");
+                        } else if (answer.includes(guess.getAttribute("data"))) {
+                            guess.classList.add("clue");
                         } else {
-                            guess.classList.add("not-in-word");
-                            currentKey.classList.add("not-in-word");
+                            if (darkThemeButton.checked) {
+                                guess.classList.add("dark-mode-not-in-word");
+                            } else {
+                                guess.classList.add("not-in-word");
+                            }
                         }
-                    }
-                    if (guess.getAttribute("data") == answer[guessIndex]) {
-                        guess.classList.remove("clue");
-                        currentKey.classList.remove("clue");
-                        guess.classList.add("correct");
-                        currentKey.classList.add("correct");
-                    }
+                    }, 500 * guessIndex);
+
+                    setTimeout(() => {
+                        //color keys
+                        currentKey.classList.remove("key-not-colored");
+                        currentKey.classList.remove("dm-key-not-colored");
+                        if (guess.getAttribute("data") == answer[guessIndex]) {
+                            currentKey.classList.add("correct");
+                        } else if (answer.includes(guess.getAttribute("data"))) {
+                            currentKey.classList.add("clue");
+                        } else {
+                            if (darkThemeButton.checked) {
+                                currentKey.classList.add("dark-mode-not-in-word");
+                            } else {
+                                currentKey.classList.add("not-in-word");
+                            }
+                        }
+                    }, 2500);
                 })
 
                 //check if game is lost
@@ -226,8 +243,11 @@ function checkWord() {
                     showMessage();
                     return;
                 } else {
-                    currentRow += 1;
-                    currentLetter = 0;
+                    setTimeout(() => {
+                        currentRow += 1;
+                        currentLetter = 0;
+                    }, 2500);
+                    console.log(currentRow)
                 }
             }
         }
