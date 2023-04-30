@@ -4,9 +4,7 @@ const helpButton = document.getElementById("help");
 const helpContainer = document.getElementById("help-container");
 const settingButton = document.getElementById("settings");
 const settingContainer = document.getElementById("settings-container");
-const closeButtonCollection = document.getElementsByClassName("close");
-//Change HTML colletion to array to use for each function
-const closeButtons = Array.prototype.slice.call(closeButtonCollection);
+const closeButtons = document.querySelectorAll(".close");
 const darkThemeButton = document.getElementById("dark-theme");
 const speedrunButton = document.getElementById("speedrun");
 const body = document.querySelector("body");
@@ -22,6 +20,10 @@ const icons = document.querySelectorAll(".material-symbols-outlined");
 const alertContainer = document.getElementById("alert-container");
 //-------------------------------------------------------
 
+import words from '/words.json' assert{type: 'json'};
+var randomWordIndex = Math.floor(Math.random() * words.length);
+const answer = words[randomWordIndex].word.toUpperCase();
+console.log(answer);
 
 
 //--------------------------------
@@ -36,7 +38,7 @@ let lightGray = "#d3d6da";
 let modalBackground = "#d9d9d96e";
 let modalBackgroundDark = "#0000004b";
 // let darkerGray = "#3a3a3c";
-const answer = "SCENT";
+//const answer = "SCENT";
 
 let currentRow = 0;
 let currentLetter = 0;
@@ -206,7 +208,6 @@ function checkWord() {
                     //if correct guess not used in that place, return
                     if (isSetMessage) {
                         showMessage("alert");
-                        console.log("alertttt")
                         currentGuessBoxes.forEach((letter) => {
                             letter.classList.add("shake");
                         })
@@ -263,7 +264,6 @@ function checkWord() {
                                 currentRow += 1;
                                 currentLetter = 0;
                             }, 2500);
-                            console.log(currentRow)
                         }
                     }
                 })
