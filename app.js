@@ -22,7 +22,8 @@ const alertContainer = document.getElementById("alert-container");
 
 fetch('./words.json')
     .then((response) => response.json())
-    .then((response) => console.log(response));
+    .then((response) => console.log(response))
+    .then((response) => console.log("response"));
 
 
 //--------------------------------
