@@ -20,6 +20,11 @@ const list = document.querySelector("#rules-list");
 const examples = document.querySelectorAll(".example-tile");
 const icons = document.querySelectorAll(".material-symbols-outlined");
 const alertContainer = document.getElementById("alert-container");
+//-------------------------------------------------------
+
+
+
+//--------------------------------
 
 //------colors-------
 let whiteish = "#FAF9F6";
@@ -159,8 +164,12 @@ function checkWord() {
     if (currentLetter === 5) {
         const currentGuess = guesses[currentRow].join("");
         const currentGuessBoxes = document.querySelectorAll(`#row-${currentRow} .letter`);
+        currentGuessBoxes.forEach((box) => {
+            box.classList.remove("shake")
+        })
+        let checkGuess = answer;
+        //const currentGuessBoxes = document.querySelectorAll(`#row-${currentRow}`).childNodes
         if (answer === currentGuess) {
-
             currentGuessBoxes.forEach((guess, guessIndex) => {
                 setTimeout(() => {
                     guess.classList.add("flip");
@@ -176,81 +185,104 @@ function checkWord() {
             return;
 
         } else {
-            //check if word is valid
-
-            //check if correct guesses used
-            currentGuessBoxes.forEach((guess, guessIndex) => {
-
-                if (currentRow != 0) {
-                    const previous = document.getElementById(`row-${currentRow - 1}-char-${guessIndex}`);
-                    if (previous.classList.contains("correct") && previous.getAttribute("data") != guess.getAttribute("data")) {
-                        isSetMessage = true;
-                    }
-                } else {
-                    if (!speedrunButton.checked) {
-                        speedrunButton.disabled = true;
-                    }
-                }
-            })
-
-            //if correct guess not used in that place, return
-            if (isSetMessage) {
-                showMessage("alert");
-                isSetMessage = false;
-                return;
-            }
-            if (currentRow <= 5) {
-                currentGuessBoxes.forEach((guess, guessIndex) => {
-                    const currentKey = document.querySelector(`#keyboard-container #${guess.getAttribute("data")}`);
-                    guess.classList.remove("typing");
-                    guess.classList.remove("dark-mode-typing");
-                    setTimeout(() => {
-                        guess.classList.add("flip");
-                        if (guess.getAttribute("data") == answer[guessIndex]) {
-                            guess.classList.add("correct");
-                        } else if (answer.includes(guess.getAttribute("data"))) {
-                            guess.classList.add("clue");
+            // check if word is valid
+            checkIfValid()
+                //if valid
+                .then(() => {
+                    //check if correct guesses used
+                    currentGuessBoxes.forEach((guess, guessIndex) => {
+                        if (currentRow != 0) {
+                            const previous = document.getElementById(`row-${currentRow - 1}-char-${guessIndex}`);
+                            if (previous.classList.contains("correct") && previous.getAttribute("data") != guess.getAttribute("data")) {
+                                isSetMessage = true;
+                            }
                         } else {
-                            if (darkThemeButton.checked) {
-                                guess.classList.add("dark-mode-not-in-word");
-                            } else {
-                                guess.classList.add("not-in-word");
+                            if (!speedrunButton.checked) {
+                                speedrunButton.disabled = true;
                             }
                         }
-                    }, 500 * guessIndex);
+                    })
 
-                    setTimeout(() => {
-                        //color keys
-                        currentKey.classList.remove("key-not-colored");
-                        currentKey.classList.remove("dm-key-not-colored");
-                        if (guess.getAttribute("data") == answer[guessIndex]) {
-                            currentKey.classList.add("correct");
-                        } else if (answer.includes(guess.getAttribute("data"))) {
-                            currentKey.classList.add("clue");
+                    //if correct guess not used in that place, return
+                    if (isSetMessage) {
+                        showMessage("alert");
+                        console.log("alertttt")
+                        currentGuessBoxes.forEach((letter) => {
+                            letter.classList.add("shake");
+                        })
+                        isSetMessage = false;
+                        return;
+                    }
+                    if (currentRow <= 5) {
+                        currentGuessBoxes.forEach((guess, guessIndex) => {
+                            const currentKey = document.querySelector(`#keyboard-container #${guess.getAttribute("data")}`);
+                            guess.classList.remove("typing");
+                            guess.classList.remove("dark-mode-typing");
+                            setTimeout(() => {
+                                guess.classList.add("flip");
+                                if (guess.getAttribute("data") == answer[guessIndex]) {
+                                    checkGuess = checkGuess.replace(guess.getAttribute("data"), "");
+                                    guess.classList.add("correct");
+                                } else if (checkGuess.includes(guess.getAttribute("data"))) {
+                                    checkGuess = checkGuess.replace(guess.getAttribute("data"), "");
+                                    guess.classList.add("clue");
+                                } else {
+                                    if (darkThemeButton.checked) {
+                                        guess.classList.add("dark-mode-not-in-word");
+                                    } else {
+                                        guess.classList.add("not-in-word");
+                                    }
+                                }
+                            }, 500 * guessIndex);
+
+                            setTimeout(() => {
+                                //color keys
+                                currentKey.classList.remove("key-not-colored");
+                                currentKey.classList.remove("dm-key-not-colored");
+                                if (guess.getAttribute("data") == answer[guessIndex]) {
+                                    currentKey.classList.add("correct");
+                                } else if (answer.includes(guess.getAttribute("data"))) {
+                                    currentKey.classList.add("clue");
+                                } else {
+                                    if (darkThemeButton.checked) {
+                                        currentKey.classList.add("dark-mode-not-in-word");
+                                    } else {
+                                        currentKey.classList.add("not-in-word");
+                                    }
+                                }
+                            }, 2500);
+                        })
+
+                        //check if game is lost
+                        if (currentRow === 5) {
+                            isGameOver = true;
+                            showMessage();
+                            return;
                         } else {
-                            if (darkThemeButton.checked) {
-                                currentKey.classList.add("dark-mode-not-in-word");
-                            } else {
-                                currentKey.classList.add("not-in-word");
-                            }
+                            setTimeout(() => {
+                                currentRow += 1;
+                                currentLetter = 0;
+                            }, 2500);
+                            console.log(currentRow)
                         }
-                    }, 2500);
+                    }
                 })
-
-                //check if game is lost
-                if (currentRow === 5) {
-                    isGameOver = true;
-                    showMessage();
+                //if not valid
+                .catch(e => {
+                    showMessage("not-valid");
+                    currentGuessBoxes.forEach((letter) => {
+                        letter.classList.add("shake");
+                    })
                     return;
-                } else {
-                    setTimeout(() => {
-                        currentRow += 1;
-                        currentLetter = 0;
-                    }, 2500);
-                    console.log(currentRow)
-                }
-            }
+                })
         }
+    }
+}
+
+async function checkIfValid() {
+    const currentGuess = guesses[currentRow].join("");
+    if (currentGuess != "") {
+        const res = await axios.get(`https://api.dictionaryapi.dev/api/v2/entries/en/${currentGuess}`);
     }
 }
 
@@ -278,8 +310,12 @@ function showMessage(currentRow) {
         case "alert":
             messageContent.textContent = "Correct letters must be used";
             break;
+        case "not-valid":
+            messageContent.textContent = "Word is not valid";
+            break;
         default:
-            messageContent.textContent = "Game Over";
+            //messageContent.textContent = "Game Over";
+            messageContent.textContent = answer;
     }
     alertContainer.append(messageContent);
     if (darkThemeButton.checked) {

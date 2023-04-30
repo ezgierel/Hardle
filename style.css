@@ -27,6 +27,28 @@
     }
 }
 
+@keyframes shake {
+    0% {
+        transform: translateX(0)
+    }
+
+    25% {
+        transform: translateX(5px)
+    }
+
+    50% {
+        transform: translateX(-5px)
+    }
+
+    75% {
+        transform: translateX(5px)
+    }
+
+    100% {
+        transform: translateX(0)
+    }
+}
+
 /* * {
     font-family: 'Noto Sans JP', sans-serif;
 } */
@@ -440,4 +462,9 @@ input:checked+.slider:before {
 
 .flip {
     animation: 0.5s linear flipping;
+}
+
+/* shake tiles if not valid word */
+.shake {
+    animation: shake 0.2s;
 }
