@@ -20,7 +20,7 @@ const icons = document.querySelectorAll(".material-symbols-outlined");
 const alertContainer = document.getElementById("alert-container");
 //-------------------------------------------------------
 
-import words from 'https://github.com/ezgierel/Hardle/blob/master/words.json' assert{type: 'json'};
+import words from '/words.json' assert{type: 'json'};
 var randomWordIndex = Math.floor(Math.random() * words.length);
 const answer = words[randomWordIndex].word.toUpperCase();
 console.log(answer);
