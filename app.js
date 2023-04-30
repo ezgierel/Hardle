@@ -20,14 +20,14 @@ const icons = document.querySelectorAll(".material-symbols-outlined");
 const alertContainer = document.getElementById("alert-container");
 //-------------------------------------------------------
 
-// import words from './words.json' assert{type: 'json'};
-// var randomWordIndex = Math.floor(Math.random() * words.length + 1);
-// const answer = words[randomWordIndex].word.toUpperCase();
-// console.log(answer);
+import words from './words.json' assert{type: 'json'};
+var randomWordIndex = Math.floor(Math.random() * words.length + 1);
+const answer = words[randomWordIndex].word.toUpperCase();
+console.log(answer);
 
-fetch('./words.json')
-    .then((response) => response.json())
-    .then((response) => console.log(response));
+// fetch('./words.json')
+//     .then((response) => response.json())
+//     .then((response) => console.log(response));
 
 
 //--------------------------------
