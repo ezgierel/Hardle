@@ -21,7 +21,7 @@ const alertContainer = document.getElementById("alert-container");
 //-------------------------------------------------------
 
 import words from '/words.json' assert{type: 'json'};
-var randomWordIndex = Math.floor(Math.random() * words.length);
+var randomWordIndex = Math.floor(Math.random() * words.length + 1);
 const answer = words[randomWordIndex].word.toUpperCase();
 console.log(answer);
 
