@@ -23,8 +23,9 @@ const alertContainer = document.getElementById("alert-container");
 //fetch a random word
 fetch('./words.json')
     .then((response) => response.json())
-    .then((response) => console.log(response))
-    .then((response) => console.log("response"));
+var randomWordIndex = Math.floor(Math.random() * response.length + 1);
+const answer = words[randomWordIndex].word.toUpperCase();
+console.log(answer);
 
 
 //--------------------------------
