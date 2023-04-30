@@ -25,7 +25,7 @@ const alertContainer = document.getElementById("alert-container");
 // const answer = words[randomWordIndex].word.toUpperCase();
 // console.log(answer);
 
-fetch('./data.json')
+fetch('./words.json')
     .then((response) => response.json())
     .then((response) => console.log(response));
 
