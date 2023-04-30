@@ -20,6 +20,7 @@ const icons = document.querySelectorAll(".material-symbols-outlined");
 const alertContainer = document.getElementById("alert-container");
 //-------------------------------------------------------
 
+//fetch a random word
 fetch('./words.json')
     .then((response) => response.json())
     .then((response) => console.log(response))
