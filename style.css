@@ -483,19 +483,20 @@ input:checked+.slider:before {
 
     /* smaller keyboard */
     #keyboard-container {
-        width: 90%;
+        width: 97%;
     }
 
     #keyboard-container button {
         width: 8%;
-        height: 40px;
-        margin: 1%;
+        height: 45px;
+        margin: 0.8%;
         cursor: pointer;
         font-family: 'Noto Sans JP', sans-serif;
-        font-size: 0.6rem;
+        /* font-size: 0.6rem; */
     }
 
     #keyboard-container button[value="ENTER"] {
+        font-size: 0.7rem;
         padding: 0;
         width: 13%;
     }
@@ -534,6 +535,5 @@ input:checked+.slider:before {
         align-items: center;
         justify-content: center;
         font-size: 1.9rem;
-        font-family: 'Noto Sans JP', sans-serif;
     }
 }
