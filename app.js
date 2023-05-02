@@ -158,7 +158,7 @@ fetch('./words.json')
                 currentBox.classList.remove("dark-mode-typing");
 
                 if (darkThemeButton.checked) {
-                    currentBox.classList.add("dark-mode-empty-row");
+                    currentBox.classList.add("dark-mode-empty-tile");
                 } else {
                     currentBox.classList.add("empty-tile");
                 }
@@ -172,7 +172,6 @@ fetch('./words.json')
                 currentGuessBoxes.forEach((box) => {
                     box.classList.remove("shake")
                 })
-                let checkGuess = answer;
                 //const currentGuessBoxes = document.querySelectorAll(`#row-${currentRow}`).childNodes
                 if (answer === currentGuess) {
                     currentGuessBoxes.forEach((guess, guessIndex) => {
@@ -219,6 +218,7 @@ fetch('./words.json')
                             }
                             if (currentRow <= 5) {
                                 currentGuessBoxes.forEach((guess, guessIndex) => {
+                                    let checkGuess = answer;
                                     const currentKey = document.querySelector(`#keyboard-container #${guess.getAttribute("data")}`);
                                     guess.classList.remove("typing");
                                     guess.classList.remove("dark-mode-typing");
@@ -241,11 +241,14 @@ fetch('./words.json')
 
                                     setTimeout(() => {
                                         //color keys
+                                        let checkGuess = answer;
                                         currentKey.classList.remove("key-not-colored");
                                         currentKey.classList.remove("dm-key-not-colored");
                                         if (guess.getAttribute("data") == answer[guessIndex]) {
+                                            currentKey.classList.remove("clue");
                                             currentKey.classList.add("correct");
-                                        } else if (answer.includes(guess.getAttribute("data"))) {
+                                            checkGuess = checkGuess.replace(guess.getAttribute("data"), "");
+                                        } else if (checkGuess.includes(guess.getAttribute("data"))) {
                                             currentKey.classList.add("clue");
                                         } else {
                                             if (darkThemeButton.checked) {

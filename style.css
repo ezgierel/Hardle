@@ -434,8 +434,8 @@ input:checked+.slider:before {
 }
 
 .dark-mode-empty-tile {
-    border-color: var(--darkGray);
-    color: var(--whiteisht);
+    border-color: var(--darkGray) !important;
+    color: var(--whiteisht) !important;
 }
 
 .typing {
@@ -467,4 +467,73 @@ input:checked+.slider:before {
 /* shake tiles if not valid word */
 .shake {
     animation: shake 0.2s;
+}
+
+@media(max-width: 600px) {
+
+    /* alert container has been moved up */
+    #alert-container {
+        margin-top: 10px;
+    }
+
+    /* board has been moved up */
+    #word-board {
+        margin-top: 10px;
+    }
+
+    /* smaller keyboard */
+    #keyboard-container {
+        width: 90%;
+    }
+
+    #keyboard-container button {
+        width: 8%;
+        height: 40px;
+        margin: 1%;
+        cursor: pointer;
+        font-family: 'Noto Sans JP', sans-serif;
+        font-size: 0.6rem;
+    }
+
+    #keyboard-container button[value="ENTER"] {
+        padding: 0;
+        width: 13%;
+    }
+
+    #keyboard-container button[value="⌫"] {
+        width: 13%;
+    }
+}
+
+@media(max-width: 350px) {
+
+    /* header */
+    .material-symbols-outlined {
+        font-size: 1.4rem !important;
+    }
+
+    .material-symbols-outlined:first-child {
+        margin: 0 10px;
+    }
+
+    #menu .material-symbols-outlined {
+        margin: 1px;
+    }
+
+    #menu {
+        margin-right: 10px;
+    }
+
+    /* game tiles */
+
+    .letter {
+        width: 40px;
+        height: 40px;
+        margin: 2px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.9rem;
+        font-family: 'Noto Sans JP', sans-serif;
+    }
 }
