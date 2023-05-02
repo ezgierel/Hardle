@@ -173,7 +173,7 @@ section {
 /* word board */
 
 #word-board {
-    margin-top: 90px;
+    margin-top: 50px;
     user-select: none;
 }
 
@@ -213,13 +213,19 @@ section {
     margin: 4px;
     cursor: pointer;
     font-family: 'Noto Sans JP', sans-serif;
+    font-size: 1.3rem;
 }
 
 #keyboard-container button[value="ENTER"] {
     width: 60px;
+    font-size: 0.9rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #keyboard-container button[value="⌫"] {
+    font-size: 1rem;
     width: 60px;
 }
 
@@ -506,7 +512,7 @@ input:checked+.slider:before {
 
     #keyboard-container button {
         width: 8%;
-        height: 45px;
+        height: 50px;
         margin: 0.8%;
         cursor: pointer;
         font-family: 'Noto Sans JP', sans-serif;
