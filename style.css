@@ -55,6 +55,8 @@
 
 body {
     margin: 0;
+    /* disable double tap zoom */
+    touch-action: manipulation;
 }
 
 
@@ -199,6 +201,8 @@ section {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    -webkit-justify-content: center;
+    -webkit-flex-wrap: wrap;
     margin-top: 40px;
     user-select: none;
 }
@@ -242,6 +246,7 @@ section {
     width: 100%;
     height: 100%;
     background-color: var(--modalBackground);
+    overflow-y: scroll;
 }
 
 
@@ -478,7 +483,6 @@ input:checked+.slider:before {
 
     .modal {
         padding-top: 0px;
-        overflow-y: scroll;
     }
 
     #settings-content,
@@ -508,11 +512,14 @@ input:checked+.slider:before {
     /* smaller keyboard */
     #keyboard-container {
         width: 97%;
+
     }
 
     #keyboard-container button {
         width: 8%;
+        -webkit-width: 8%;
         height: 50px;
+        -webkit-height: 50px;
         margin: 0.8%;
         cursor: pointer;
         font-family: 'Noto Sans JP', sans-serif;
