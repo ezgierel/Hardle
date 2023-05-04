@@ -217,47 +217,35 @@ fetch('./words.json')
                                 return;
                             }
                             if (currentRow <= 5) {
+                                let checkGuess = answer;
                                 currentGuessBoxes.forEach((guess, guessIndex) => {
-                                    let checkGuess = answer;
                                     const currentKey = document.querySelector(`#keyboard-container #${guess.getAttribute("data")}`);
-                                    guess.classList.remove("typing");
-                                    guess.classList.remove("dark-mode-typing");
                                     setTimeout(() => {
                                         guess.classList.add("flip");
+                                        console.log(checkGuess + "num " + guessIndex);
                                         if (guess.getAttribute("data") == answer[guessIndex]) {
+                                            guess.classList.remove("typing");
+                                            guess.classList.remove("dark-mode-typing");
                                             checkGuess = checkGuess.replace(guess.getAttribute("data"), "");
                                             guess.classList.add("correct");
+                                            colorKeys("correct", currentKey, guessIndex);
                                         } else if (checkGuess.includes(guess.getAttribute("data"))) {
                                             checkGuess = checkGuess.replace(guess.getAttribute("data"), "");
+                                            guess.classList.remove("typing");
+                                            guess.classList.remove("dark-mode-typing");
                                             guess.classList.add("clue");
+                                            colorKeys("clue", currentKey, guessIndex);
                                         } else {
+                                            guess.classList.remove("typing");
+                                            guess.classList.remove("dark-mode-typing");
                                             if (darkThemeButton.checked) {
                                                 guess.classList.add("dark-mode-not-in-word");
                                             } else {
                                                 guess.classList.add("not-in-word");
                                             }
+                                            colorKeys("not", currentKey, guessIndex);
                                         }
                                     }, 500 * guessIndex);
-
-                                    setTimeout(() => {
-                                        //color keys
-                                        let checkGuess = answer;
-                                        currentKey.classList.remove("key-not-colored");
-                                        currentKey.classList.remove("dm-key-not-colored");
-                                        if (guess.getAttribute("data") == answer[guessIndex]) {
-                                            currentKey.classList.remove("clue");
-                                            currentKey.classList.add("correct");
-                                            checkGuess = checkGuess.replace(guess.getAttribute("data"), "");
-                                        } else if (checkGuess.includes(guess.getAttribute("data"))) {
-                                            currentKey.classList.add("clue");
-                                        } else {
-                                            if (darkThemeButton.checked) {
-                                                currentKey.classList.add("dark-mode-not-in-word");
-                                            } else {
-                                                currentKey.classList.add("not-in-word");
-                                            }
-                                        }
-                                    }, 2500);
                                 })
 
                                 //check if game is lost
@@ -282,7 +270,33 @@ fetch('./words.json')
                             return;
                         })
                 }
+            } else {
+                showMessage("not-enough-letters");
             }
+        }
+
+        function colorKeys(guessType, currentKey, guessIndex) {
+            setTimeout(() => {
+                currentKey.classList.remove("key-not-colored");
+                currentKey.classList.remove("dm-key-not-colored");
+
+                switch (guessType) {
+                    case "correct":
+                        currentKey.classList.remove("clue");
+                        currentKey.classList.add("correct");
+                        break;
+                    case "clue":
+                        currentKey.classList.add("clue");
+                        break;
+                    case "not":
+                        if (darkThemeButton.checked) {
+                            currentKey.classList.add("dark-mode-not-in-word");
+                        } else {
+                            currentKey.classList.add("not-in-word");
+                        }
+                        break;
+                }
+            }, 2500 - guessIndex * 500)
         }
 
         async function checkIfValid() {
@@ -292,9 +306,9 @@ fetch('./words.json')
             }
         }
 
-        function showMessage(currentRow) {
+        function showMessage(alertType) {
             const messageContent = document.createElement("p");
-            switch (currentRow) {
+            switch (alertType) {
                 case 0:
                     messageContent.textContent = "Genius";
                     break;
@@ -318,6 +332,9 @@ fetch('./words.json')
                     break;
                 case "not-valid":
                     messageContent.textContent = "Word is not valid";
+                    break;
+                case "not-enough-letters":
+                    messageContent.textContent = "Not enough letters";
                     break;
                 default:
                     //messageContent.textContent = "Game Over";

@@ -517,9 +517,7 @@ input:checked+.slider:before {
 
     #keyboard-container button {
         width: 8%;
-        -webkit-width: 8%;
         height: 50px;
-        -webkit-height: 50px;
         margin: 0.8%;
         cursor: pointer;
         font-family: 'Noto Sans JP', sans-serif;
