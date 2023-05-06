@@ -49,6 +49,28 @@
     }
 }
 
+@keyframes jump {
+    0% {
+        transform: translateY(0)
+    }
+
+    25% {
+        transform: translateY(-15px)
+    }
+
+    50% {
+        transform: translateY(0)
+    }
+
+    75% {
+        transform: translateY(-10px)
+    }
+
+    100% {
+        transform: translateY(0)
+    }
+}
+
 /* * {
     font-family: 'Noto Sans JP', sans-serif;
 } */
@@ -477,6 +499,10 @@ input:checked+.slider:before {
 /* shake tiles if not valid word */
 .shake {
     animation: shake 0.2s;
+}
+
+.jump {
+    animation: jump 0.5s;
 }
 
 @media(max-width: 600px) {

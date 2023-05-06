@@ -166,9 +166,10 @@ fetch('./words.json')
         }
 
         function checkWord() {
+            const currentGuessBoxes = document.querySelectorAll(`#row-${currentRow} .letter`);
             if (currentLetter === 5) {
                 const currentGuess = guesses[currentRow].join("");
-                const currentGuessBoxes = document.querySelectorAll(`#row-${currentRow} .letter`);
+                // const currentGuessBoxes = document.querySelectorAll(`#row-${currentRow} .letter`);
                 currentGuessBoxes.forEach((box) => {
                     box.classList.remove("shake")
                 })
@@ -185,6 +186,12 @@ fetch('./words.json')
                     setTimeout(() => {
                         showMessage(currentRow);
                         isGameOver = true;
+                        currentGuessBoxes.forEach((guess, guessIndex) => {
+                            setTimeout(() => {
+                                guess.classList.add("jump");
+                            }, 300 * guessIndex)
+
+                        })
                     }, 2500);
                     return;
 
@@ -217,36 +224,8 @@ fetch('./words.json')
                                 return;
                             }
                             if (currentRow <= 5) {
-                                let checkGuess = answer;
-                                currentGuessBoxes.forEach((guess, guessIndex) => {
-                                    const currentKey = document.querySelector(`#keyboard-container #${guess.getAttribute("data")}`);
-                                    setTimeout(() => {
-                                        guess.classList.add("flip");
-                                        console.log(checkGuess + "num " + guessIndex);
-                                        if (guess.getAttribute("data") == answer[guessIndex]) {
-                                            guess.classList.remove("typing");
-                                            guess.classList.remove("dark-mode-typing");
-                                            checkGuess = checkGuess.replace(guess.getAttribute("data"), "");
-                                            guess.classList.add("correct");
-                                            colorKeys("correct", currentKey, guessIndex);
-                                        } else if (checkGuess.includes(guess.getAttribute("data"))) {
-                                            checkGuess = checkGuess.replace(guess.getAttribute("data"), "");
-                                            guess.classList.remove("typing");
-                                            guess.classList.remove("dark-mode-typing");
-                                            guess.classList.add("clue");
-                                            colorKeys("clue", currentKey, guessIndex);
-                                        } else {
-                                            guess.classList.remove("typing");
-                                            guess.classList.remove("dark-mode-typing");
-                                            if (darkThemeButton.checked) {
-                                                guess.classList.add("dark-mode-not-in-word");
-                                            } else {
-                                                guess.classList.add("not-in-word");
-                                            }
-                                            colorKeys("not", currentKey, guessIndex);
-                                        }
-                                    }, 500 * guessIndex);
-                                })
+                                setTileColors(currentGuessBoxes);
+                                colorTiles(currentGuessBoxes);
 
                                 //check if game is lost
                                 if (currentRow === 5) {
@@ -272,7 +251,58 @@ fetch('./words.json')
                 }
             } else {
                 showMessage("not-enough-letters");
+                currentGuessBoxes.forEach((guess) => {
+                    guess.classList.add("shake");
+                })
+                return;
             }
+        }
+
+        function setTileColors(currentGuessBoxes) {
+            let checkGuess = answer;
+            currentGuessBoxes.forEach((guess, guessIndex) => {
+                if (guess.getAttribute("data") == answer[guessIndex]) {
+                    checkGuess = checkGuess.replace(guess.getAttribute("data"), "");
+                    guess.value = "correct";
+                }
+            })
+
+            //set values seperately so if a letter is in a correct spot but also exists in previous indexes it's not colored
+            currentGuessBoxes.forEach((guess) => {
+                if (checkGuess.includes(guess.getAttribute("data")) && guess.value !== "correct") {
+                    checkGuess = checkGuess.replace(guess.getAttribute("data"), "");
+                    guess.value = "clue";
+                }
+            })
+        }
+
+        function colorTiles(currentGuessBoxes) {
+            currentGuessBoxes.forEach((guess, guessIndex) => {
+                const currentKey = document.querySelector(`#keyboard-container #${guess.getAttribute("data")}`);
+                setTimeout(() => {
+                    guess.classList.remove("typing");
+                    guess.classList.remove("dark-mode-typing");
+                }, guessIndex * 500)
+                //flip and color tiles one by one
+                setTimeout(() => {
+                    guess.classList.add("flip");
+                    if (guess.value == "correct") {
+                        guess.classList.add("correct");
+                        colorKeys("correct", currentKey, guessIndex);
+                    } else if (guess.value == "clue") {
+                        guess.classList.add("clue");
+                        colorKeys("clue", currentKey, guessIndex);
+                    } else {
+                        if (darkThemeButton.checked) {
+                            guess.classList.add("dark-mode-not-in-word");
+                        } else {
+                            guess.classList.add("not-in-word");
+                        }
+                        colorKeys("not", currentKey, guessIndex);
+                    }
+                }, 500 * guessIndex);
+            })
+
         }
 
         function colorKeys(guessType, currentKey, guessIndex) {
@@ -286,13 +316,17 @@ fetch('./words.json')
                         currentKey.classList.add("correct");
                         break;
                     case "clue":
-                        currentKey.classList.add("clue");
+                        //do not recolor the key if same letter is also in a correct spot
+                        if (currentKey.classList.contains("correct") == false)
+                            currentKey.classList.add("clue");
                         break;
                     case "not":
-                        if (darkThemeButton.checked) {
-                            currentKey.classList.add("dark-mode-not-in-word");
-                        } else {
-                            currentKey.classList.add("not-in-word");
+                        if (currentKey.classList.contains("correct") == false && currentKey.classList.contains("clue") == false) {
+                            if (darkThemeButton.checked) {
+                                currentKey.classList.add("dark-mode-not-in-word");
+                            } else {
+                                currentKey.classList.add("not-in-word");
+                            }
                         }
                         break;
                 }
