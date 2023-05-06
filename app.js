@@ -8,6 +8,7 @@ const settingContainer = document.getElementById("settings-container");
 const closeButtons = document.querySelectorAll(".close");
 const darkThemeButton = document.getElementById("dark-theme");
 const speedrunButton = document.getElementById("speedrun");
+const highContrastButton = document.getElementById("high-contrast");
 const body = document.querySelector("body");
 const header = document.querySelector("header");
 const title = document.getElementById("title");
@@ -19,16 +20,18 @@ const list = document.querySelector("#rules-list");
 const examples = document.querySelectorAll(".example-tile");
 const icons = document.querySelectorAll(".material-symbols-outlined");
 const alertContainer = document.getElementById("alert-container");
+const sliders = document.querySelectorAll(".slider");
 
 //COLOURS
 let whiteish = "#FAF9F6";
 let blackish = "#121212";
 // let darkGray = "#787c7e";
 let lightGray = "#d3d6da";
-// let correct = "#6aaa64";
+let correct = "#6aaa64";
 // let clue = "#c9b458";
 let modalBackground = "#d9d9d96e";
 let modalBackgroundDark = "#0000004b";
+let highContrastBackGround = "#85c0f9";
 // let darkerGray = "#3a3a3c";
 //const answer = "SCENT";
 
@@ -287,11 +290,21 @@ fetch('./words.json')
                 setTimeout(() => {
                     guess.classList.add("flip");
                     if (guess.value == "correct") {
-                        guess.classList.add("correct");
-                        colorKeys("correct", currentKey, guessIndex);
+                        if (highContrastButton.checked) {
+                            guess.classList.add("high-contrast-correct");
+                            colorKeys("high-contrast-correct", currentKey, guessIndex);
+                        } else {
+                            guess.classList.add("correct");
+                            colorKeys("correct", currentKey, guessIndex);
+                        }
                     } else if (guess.value == "clue") {
-                        guess.classList.add("clue");
-                        colorKeys("clue", currentKey, guessIndex);
+                        if (highContrastButton.checked) {
+                            guess.classList.add("high-contrast-clue");
+                            colorKeys("high-contrast-clue", currentKey, guessIndex);
+                        } else {
+                            guess.classList.add("clue");
+                            colorKeys("clue", currentKey, guessIndex);
+                        }
                     } else {
                         if (darkThemeButton.checked) {
                             guess.classList.add("dark-mode-not-in-word");
@@ -307,21 +320,23 @@ fetch('./words.json')
 
         function colorKeys(guessType, currentKey, guessIndex) {
             setTimeout(() => {
-                currentKey.classList.remove("key-not-colored");
-                currentKey.classList.remove("dm-key-not-colored");
-
                 switch (guessType) {
                     case "correct":
+                        currentKey.classList.remove("dark-mode-not-in-word");
+                        currentKey.classList.remove("not-in-word");
                         currentKey.classList.remove("clue");
                         currentKey.classList.add("correct");
                         break;
                     case "clue":
                         //do not recolor the key if same letter is also in a correct spot
-                        if (currentKey.classList.contains("correct") == false)
+                        if (currentKey.classList.contains("correct") == false) {
+                            currentKey.classList.remove("dark-mode-not-in-word");
+                            currentKey.classList.remove("not-in-word");
                             currentKey.classList.add("clue");
+                        }
                         break;
                     case "not":
-                        if (currentKey.classList.contains("correct") == false && currentKey.classList.contains("clue") == false) {
+                        if (currentKey.classList.contains("key-not-colored") == true) {
                             if (darkThemeButton.checked) {
                                 currentKey.classList.add("dark-mode-not-in-word");
                             } else {
@@ -329,7 +344,16 @@ fetch('./words.json')
                             }
                         }
                         break;
+                    case "high-contrast-correct":
+                        currentKey.classList.remove("high-contrast-clue");
+                        currentKey.classList.add("high-contrast-correct");
+                        break;
+                    case "high-contrast-clue":
+                        currentKey.classList.add("high-contrast-clue");
+                        break;
                 }
+                currentKey.classList.remove("key-not-colored");
+                currentKey.classList.remove("dm-key-not-colored");
             }, 2500 - guessIndex * 500)
         }
 
@@ -395,8 +419,11 @@ fetch('./words.json')
 
 
         //-----closing modal boxes----
-        //by clicking somewhere else
-        window.onclick = function (evt) {
+        //by clicking or touching somewhere else
+        window.onclick = closeModal;
+        window.ontouchend = closeModal;
+
+        function closeModal(evt) {
             if (evt.target == helpContainer) {
                 helpContainer.style.display = "none";
             } else if (evt.target == settingContainer) {
@@ -560,6 +587,54 @@ fetch('./words.json')
 
             }
         })
+
+        //high contrast button
+        highContrastButton.addEventListener("change", () => {
+            const keyButtons = document.querySelectorAll("button");
+            const gameTiles = document.querySelectorAll(".letter");
+
+            if (highContrastButton.checked) {
+                //change colors
+                highContrastSetColor(keyButtons);
+                highContrastSetColor(examples);
+                highContrastSetColor(gameTiles);
+                highContrastButton.nextElementSibling.style.setProperty('--correct', `${highContrastBackGround}`);
+                darkThemeButton.nextElementSibling.style.setProperty('--correct', `${highContrastBackGround}`);
+                speedrunButton.nextElementSibling.style.setProperty('--correct', `${highContrastBackGround}`);
+            } else {
+                //remove changes
+                highContrastRemoveColor(keyButtons);
+                highContrastRemoveColor(examples);
+                highContrastRemoveColor(gameTiles);
+                highContrastButton.nextElementSibling.style.setProperty('--correct', `${correct}`);
+                darkThemeButton.nextElementSibling.style.setProperty('--correct', `${correct}`);
+                speedrunButton.nextElementSibling.style.setProperty('--correct', `${correct}`);
+            }
+        })
+
+        function highContrastSetColor(elementList) {
+            elementList.forEach(element => {
+                if (element.classList.contains("correct")) {
+                    element.classList.remove("correct");
+                    element.classList.add("high-contrast-correct")
+                } else if (element.classList.contains("clue")) {
+                    element.classList.remove("clue");
+                    element.classList.add("high-contrast-clue");
+                }
+            })
+        }
+
+        function highContrastRemoveColor(elementList) {
+            elementList.forEach(element => {
+                if (element.classList.contains("high-contrast-correct")) {
+                    element.classList.remove("high-contrast-correct");
+                    element.classList.add("correct");
+                } else if (element.classList.contains("high-contrast-clue")) {
+                    element.classList.remove("high-contrast-clue");
+                    element.classList.add("clue");
+                }
+            })
+        }
     })
 
 

@@ -11,6 +11,8 @@
     --blackishTransparent: #121212ac;
     --darkerGray: #3a3a3c;
     --whiteish: #FAF9F6;
+    --highContrastCorrect: #85c0f9;
+    --highContrastClue: #f5793a;
 }
 
 @keyframes flipping {
@@ -227,6 +229,8 @@ section {
     -webkit-flex-wrap: wrap;
     margin-top: 40px;
     user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
 }
 
 
@@ -440,9 +444,23 @@ input:checked+.slider:before {
     transition: none;
 }
 
+.high-contrast-correct {
+    background-color: var(--highContrastCorrect) !important;
+    border-color: var(--highContrastCorrect) !important;
+    color: white !important;
+    transition: none;
+}
+
 .clue {
     background-color: var(--clue) !important;
     border-color: var(--clue) !important;
+    color: white !important;
+    transition: none;
+}
+
+.high-contrast-clue {
+    background-color: var(--highContrastClue) !important;
+    border-color: var(--highContrastClue) !important;
     color: white !important;
     transition: none;
 }
