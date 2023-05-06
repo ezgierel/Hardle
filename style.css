@@ -170,6 +170,27 @@ section {
 
 }
 
+/* timer */
+
+#timer-container {
+    width: 200px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#timer-content {
+    visibility: hidden;
+    font-size: 1.1rem;
+    font-family: 'Noto Sans JP', sans-serif;
+    /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: bold; */
+}
+
+
+/* alert */
+
 #alert-container {
     display: flex;
     flex-direction: column;
@@ -199,7 +220,7 @@ section {
 /* word board */
 
 #word-board {
-    margin-top: 50px;
+    /* margin-top: 50px; */
     user-select: none;
 }
 

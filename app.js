@@ -21,6 +21,10 @@ const examples = document.querySelectorAll(".example-tile");
 const icons = document.querySelectorAll(".material-symbols-outlined");
 const alertContainer = document.getElementById("alert-container");
 const sliders = document.querySelectorAll(".slider");
+const timerContainer = document.getElementById("timer-container");
+const timerContent = document.getElementById("timer-content");
+const minute = document.getElementById("minute");
+const second = document.getElementById("second");
 
 //COLOURS
 let whiteish = "#FAF9F6";
@@ -123,24 +127,28 @@ fetch('./words.json')
 
         //--------------typing functions----------
         function typeLetter(letter) {
-            const currentBox = document.getElementById(`row-${currentRow}-char-${currentLetter}`);
-            if (currentLetter < 5) {
-                currentBox.textContent = letter.toUpperCase();
-                currentBox.value = letter.toUpperCase();
-                currentBox.setAttribute("data", letter.toUpperCase());
-                guesses[currentRow][currentLetter] = letter.toUpperCase();
+            if (isGameOver) {
+                return;
+            } else {
+                const currentBox = document.getElementById(`row-${currentRow}-char-${currentLetter}`);
+                if (currentLetter < 5) {
+                    currentBox.textContent = letter.toUpperCase();
+                    currentBox.value = letter.toUpperCase();
+                    currentBox.setAttribute("data", letter.toUpperCase());
+                    guesses[currentRow][currentLetter] = letter.toUpperCase();
 
-                currentBox.classList.remove("dark-mode-empty-tile");
-                currentBox.classList.remove("empty-tile");
+                    currentBox.classList.remove("dark-mode-empty-tile");
+                    currentBox.classList.remove("empty-tile");
 
-                if (darkThemeButton.checked) {
-                    currentBox.classList.remove("typing");
-                    currentBox.classList.add("dark-mode-typing");
-                } else {
-                    currentBox.classList.remove("dark-mode-typing");
-                    currentBox.classList.add("typing");
+                    if (darkThemeButton.checked) {
+                        currentBox.classList.remove("typing");
+                        currentBox.classList.add("dark-mode-typing");
+                    } else {
+                        currentBox.classList.remove("dark-mode-typing");
+                        currentBox.classList.add("typing");
+                    }
+                    currentLetter += 1;
                 }
-                currentLetter += 1;
             }
         }
 
@@ -172,9 +180,8 @@ fetch('./words.json')
             const currentGuessBoxes = document.querySelectorAll(`#row-${currentRow} .letter`);
             if (currentLetter === 5) {
                 const currentGuess = guesses[currentRow].join("");
-                // const currentGuessBoxes = document.querySelectorAll(`#row-${currentRow} .letter`);
                 currentGuessBoxes.forEach((box) => {
-                    box.classList.remove("shake")
+                    box.classList.remove("shake");
                 })
                 //const currentGuessBoxes = document.querySelectorAll(`#row-${currentRow}`).childNodes
                 if (answer === currentGuess) {
@@ -189,6 +196,7 @@ fetch('./words.json')
                     setTimeout(() => {
                         showMessage(currentRow);
                         isGameOver = true;
+                        clearInterval(timerInterval);
                         currentGuessBoxes.forEach((guess, guessIndex) => {
                             setTimeout(() => {
                                 guess.classList.add("jump");
@@ -203,6 +211,26 @@ fetch('./words.json')
                     checkIfValid()
                         //if valid
                         .then(() => {
+                            if (currentRow === 0 && speedrunButton.checked === true) {
+                                timerInterval = setInterval(() => {
+                                    if (minute.innerText == "00" && second.innerText == "00") {
+                                        isGameOver = true;
+                                        showMessage();
+                                        clearInterval(timerInterval);
+                                        return;
+                                    } else {
+                                        if (minute.innerText == "01") {
+                                            minute.innerText = "00";
+                                            second.innerText = "59";
+                                        } else {
+                                            second.innerText = parseInt(second.innerText) - 1;
+                                            if (second.innerText < 10) {
+                                                second.innerText = `0${second.innerText}`
+                                            }
+                                        }
+                                    }
+                                }, 1000);
+                            }
                             //check if correct guesses used
                             currentGuessBoxes.forEach((guess, guessIndex) => {
                                 if (currentRow != 0) {
@@ -232,6 +260,7 @@ fetch('./words.json')
 
                                 //check if game is lost
                                 if (currentRow === 5) {
+                                    clearInterval(timerInterval);
                                     isGameOver = true;
                                     showMessage();
                                     return;
@@ -635,6 +664,16 @@ fetch('./words.json')
                 }
             })
         }
+
+
+        //speedrun button
+        speedrunButton.addEventListener("change", () => {
+            if (speedrunButton.checked) {
+                timerContent.style.visibility = "visible";
+            } else {
+                timerContent.style.visibility = "hidden";
+            }
+        })
     })
 
 
