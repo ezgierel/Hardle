@@ -190,7 +190,11 @@ fetch('./words.json')
                             guess.classList.add("flip");
                             guess.classList.remove("typing");
                             guess.classList.remove("dark-mode-typing");
-                            guess.classList.add("correct");
+                            if (highContrastButton.checked) {
+                                guess.classList.add("high-contrast-correct");
+                            } else {
+                                guess.classList.add("correct");
+                            }
                         }, 400 * guessIndex);
                     })
                     setTimeout(() => {
