@@ -419,6 +419,7 @@ fetch('./words.json')
                 })
                 //const currentGuessBoxes = document.querySelectorAll(`#row-${currentRow}`).childNodes
                 if (answer === currentGuess) {
+                    clearInterval(timerInterval);
                     currentGuessBoxes.forEach((guess, guessIndex) => {
                         setTimeout(() => {
                             guess.classList.add("flip");
@@ -434,7 +435,6 @@ fetch('./words.json')
                     setTimeout(() => {
                         showMessage(currentRow);
                         isGameOver = true;
-                        clearInterval(timerInterval);
                         currentGuessBoxes.forEach((guess, guessIndex) => {
                             setTimeout(() => {
                                 guess.classList.add("jump");
