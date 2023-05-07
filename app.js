@@ -29,15 +29,12 @@ const second = document.getElementById("second");
 //COLOURS
 let whiteish = "#FAF9F6";
 let blackish = "#121212";
-// let darkGray = "#787c7e";
 let lightGray = "#d3d6da";
 let correct = "#6aaa64";
-// let clue = "#c9b458";
 let modalBackground = "#d9d9d96e";
 let modalBackgroundDark = "#0000004b";
 let highContrastBackGround = "#85c0f9";
-// let darkerGray = "#3a3a3c";
-//const answer = "SCENT";
+
 
 //VARIABLES
 let currentRow = 0;
@@ -47,54 +44,293 @@ let isSetMessage = false;
 
 //-------------------------------------------------------
 
+//set array for keyboard and each guesses so js can create buttons and tiles
+const keys = ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '⌫'];
+const guesses = [
+    ['', '', '', '', ''],
+    ['', '', '', '', ''],
+    ['', '', '', '', ''],
+    ['', '', '', '', ''],
+    ['', '', '', '', ''],
+    ['', '', '', '', '']
+]
+
+//create  boxes for letters
+guesses.forEach((row, rowIndex) => {
+    const rowContainer = document.createElement("div");
+    rowContainer.id = `row-${rowIndex}`;
+    rowContainer.classList.add('row');
+
+    row.forEach((letter, letterIndex) => {
+        const tile = document.createElement("span");
+        tile.id = `row-${rowIndex}-char-${letterIndex}`;
+        tile.classList.add('letter');
+        if (darkThemeButton.checked) {
+            tile.classList.add("dark-mode-empty-tile");
+        } else {
+            tile.classList.add("empty-tile");
+        }
+        rowContainer.append(tile);
+    });
+    gameBoard.append(rowContainer);
+});
+
+//set keyboard and add click event listener
+keys.forEach(key => {
+    const keyboardButton = document.createElement('button');
+    keyboardButton.textContent = key;
+    keyboardButton.id = key;
+    keyboardButton.value = key;
+    keyboardButton.classList.add("key-not-colored");
+    keyboardButton.addEventListener('click', () => handleClick(key));
+    keyboard.append(keyboardButton);
+})
+
+//on load
+window.onload = function () {
+    let theme = localStorage.getItem("theme");
+    let contrast = localStorage.getItem("contrast");
+    let speedrun = localStorage.getItem("speedrun");
+
+    if (contrast === "high") {
+        highContrastButton.checked = true;
+        applyHighContrast();
+    }
+
+    if (theme === "dark") {
+        darkThemeButton.checked = true;
+        applyDarkTheme();
+    }
+
+    if (speedrun === "on") {
+        speedrunButton.checked = true;
+        applySpeedrun();
+    }
+}
+
+//SETTING FUNCTIONS
+function applyHighContrast() {
+    const keyButtons = document.querySelectorAll("button");
+    const gameTiles = document.querySelectorAll(".letter");
+
+    if (highContrastButton.checked) {
+        //change colors
+        localStorage.setItem("contrast", "high");
+        highContrastSetColor(keyButtons);
+        highContrastSetColor(examples);
+        highContrastSetColor(gameTiles);
+        highContrastButton.nextElementSibling.style.setProperty('--correct', `${highContrastBackGround}`);
+        darkThemeButton.nextElementSibling.style.setProperty('--correct', `${highContrastBackGround}`);
+        speedrunButton.nextElementSibling.style.setProperty('--correct', `${highContrastBackGround}`);
+    } else {
+        //remove changes
+        localStorage.setItem("contrast", "low");
+        highContrastRemoveColor(keyButtons);
+        highContrastRemoveColor(examples);
+        highContrastRemoveColor(gameTiles);
+        highContrastButton.nextElementSibling.style.setProperty('--correct', `${correct}`);
+        darkThemeButton.nextElementSibling.style.setProperty('--correct', `${correct}`);
+        speedrunButton.nextElementSibling.style.setProperty('--correct', `${correct}`);
+    }
+}
+
+function highContrastSetColor(elementList) {
+    elementList.forEach(element => {
+        if (element.classList.contains("correct")) {
+            element.classList.remove("correct");
+            element.classList.add("high-contrast-correct")
+        } else if (element.classList.contains("clue")) {
+            element.classList.remove("clue");
+            element.classList.add("high-contrast-clue");
+        }
+    })
+}
+
+function highContrastRemoveColor(elementList) {
+    elementList.forEach(element => {
+        if (element.classList.contains("high-contrast-correct")) {
+            element.classList.remove("high-contrast-correct");
+            element.classList.add("correct");
+        } else if (element.classList.contains("high-contrast-clue")) {
+            element.classList.remove("high-contrast-clue");
+            element.classList.add("clue");
+        }
+    })
+}
+
+function applyDarkTheme() {
+    const keyButtons = document.querySelectorAll("button");
+    const gameTiles = document.querySelectorAll(".letter");
+    //if button is checked
+    if (darkThemeButton.checked) {
+        localStorage.setItem("theme", "dark");
+        setDarkTheme(keyButtons, gameTiles);
+    } else {
+        localStorage.setItem("theme", "light");
+        removeDarkTheme(keyButtons, gameTiles);
+    }
+}
+
+function setDarkTheme(keyButtons, gameTiles) {
+    body.style.backgroundColor = blackish;
+    header.style.borderColor = modalBackground;
+    title.style.color = whiteish;
+
+    //modal background 
+    modals.forEach(modal => {
+        modal.style.backgroundColor = modalBackgroundDark;
+    })
+
+    //modal container
+    modalContents.forEach(modal => {
+        modal.style.backgroundColor = blackish;
+        modal.style.boxShadow = `0 0 18px black`;
+    })
+
+    //paragraphs
+    paragraph.forEach(p => {
+        p.style.color = whiteish;
+    })
+
+    //headers
+    headers.forEach(header => {
+        header.style.color = whiteish;
+    })
+
+    //list
+    list.style.color = whiteish;
+
+    //example tiles
+    examples.forEach(tile => {
+        tile.style.color = whiteish;
+        if (tile.classList.contains("not-in-word")) {
+            tile.classList.remove("not-in-word");
+            tile.classList.add("dark-mode-not-in-word");
+        }
+    })
+
+    //icons
+    icons.forEach(icon => {
+        icon.style.color = whiteish;
+    })
+
+    //keyboard
+    keyButtons.forEach(key => {
+        if (key.classList.contains("key-not-colored")) {
+            key.classList.remove("key-not-colored");
+            key.classList.add("dm-key-not-colored");
+        } else if (key.classList.contains("not-in-word")) {
+            key.classList.remove("not-in-word");
+            key.classList.add("dark-mode-not-in-word");
+        }
+    })
+
+    //game-tiles
+    gameTiles.forEach(tile => {
+        if (tile.getAttribute("data") == null) {
+            tile.classList.remove("empty-tile");
+            tile.classList.add("dark-mode-empty-tile")
+        } else {
+            if (tile.classList.contains("not-in-word")) {
+                tile.classList.remove("not-in-word");
+                tile.classList.add("dark-mode-not-in-word");
+            }
+        }
+    })
+
+}
+
+function removeDarkTheme(keyButtons, gameTiles) {
+    body.style.backgroundColor = "white";
+    header.style.borderColor = lightGray;
+    title.style.color = "black";
+
+    //modal background 
+    modals.forEach(modal => {
+        modal.style.backgroundColor = modalBackground;
+    })
+
+    //modal container
+    modalContents.forEach(modal => {
+        modal.style.backgroundColor = "white";
+        modal.style.boxShadow = `0 0 18px #888`;
+    })
+
+    //paragraphs
+    paragraph.forEach(p => {
+        p.style.color = "black";
+    })
+
+    //headers
+    headers.forEach(header => {
+        header.style.color = "black";
+    })
+
+    //list
+    list.style.color = "black";
+
+    //example tiles
+    examples.forEach(tile => {
+        tile.style.color = "black";
+        if (tile.classList.contains("dark-mode-not-in-word")) {
+            tile.classList.remove("dark-mode-not-in-word");
+            tile.classList.add("not-in-word");
+        }
+    })
+
+    //icons
+    icons.forEach(icon => {
+        icon.style.color = "black";
+    })
+
+    //keyboard
+    keyButtons.forEach(key => {
+        if (key.classList.contains("dm-key-not-colored")) {
+            key.classList.remove("dm-key-not-colored");
+            key.classList.add("key-not-colored");
+        } else if (key.classList.contains("dark-mode-not-in-word")) {
+            key.classList.remove("dark-mode-not-in-word");
+            key.classList.add("not-in-word");
+        }
+    })
+
+    //game-tiles
+    gameTiles.forEach(tile => {
+        if (tile.getAttribute("data") === null) {
+            tile.classList.remove("dark-mode-empty-tile");
+            tile.classList.add("empty-tile");
+        } else {
+            if (tile.classList.contains("dark-mode-not-in-word")) {
+                tile.classList.remove("dark-mode-not-in-word");
+                tile.classList.add("not-in-word");
+            }
+        }
+    })
+}
+
+function applySpeedrun() {
+    if (speedrunButton.checked) {
+        localStorage.setItem("speedrun", "on");
+        timerContent.style.visibility = "visible";
+    } else {
+        localStorage.setItem("speedrun", "off");
+        timerContent.style.visibility = "hidden";
+    }
+}
+
+
 //FETCH A RANDOM WORD AS AN ANSWER
 fetch('./words.json')
     .then((response) => response.json())
     .then((response) => {
         let randomWordIndex = Math.floor(Math.random() * response.length + 1);
         const answer = response[randomWordIndex].word.toUpperCase();
+        const keyboardButtons = document.querySelectorAll("button");
         console.log(answer)
 
-        //set array for keyboard and each guesses so js can create buttons and tiles
-        const keys = ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '⌫'];
-        const guesses = [
-            ['', '', '', '', ''],
-            ['', '', '', '', ''],
-            ['', '', '', '', ''],
-            ['', '', '', '', ''],
-            ['', '', '', '', ''],
-            ['', '', '', '', '']
-        ]
-
-        //create  boxes for letters
-        guesses.forEach((row, rowIndex) => {
-            const rowContainer = document.createElement("div");
-            rowContainer.id = `row-${rowIndex}`;
-            rowContainer.classList.add('row');
-
-            row.forEach((letter, letterIndex) => {
-                const tile = document.createElement("span");
-                tile.id = `row-${rowIndex}-char-${letterIndex}`;
-                tile.classList.add('letter');
-                if (darkThemeButton.checked) {
-                    tile.classList.add("dark-mode-empty-tile");
-                } else {
-                    tile.classList.add("empty-tile");
-                }
-                rowContainer.append(tile);
-            });
-            gameBoard.append(rowContainer);
-        });
-
-        //set keyboard and add click event listener
-        keys.forEach(key => {
-            const keyboardButton = document.createElement('button');
-            keyboardButton.textContent = key;
-            keyboardButton.id = key;
-            keyboardButton.value = key;
-            keyboardButton.classList.add("key-not-colored");
-            keyboardButton.addEventListener('click', () => handleClick(key));
-            keyboard.append(keyboardButton);
+        //add event listener to keys
+        keyboardButtons.forEach(key => {
+            key.addEventListener('click', () => handleClick(key));
         })
 
         //screen-keyboard click functions
@@ -369,7 +605,7 @@ fetch('./words.json')
                         }
                         break;
                     case "not":
-                        if (currentKey.classList.contains("key-not-colored") == true) {
+                        if (currentKey.classList.contains("key-not-colored") == true || currentKey.classList.contains("dm-key-not-colored")) {
                             if (darkThemeButton.checked) {
                                 currentKey.classList.add("dark-mode-not-in-word");
                             } else {
@@ -478,207 +714,14 @@ fetch('./words.json')
 
         //----------settings--------s
         //dark theme
-        darkThemeButton.addEventListener("change", () => {
-            const keyButtons = document.querySelectorAll("button");
-            const gameTiles = document.querySelectorAll(".letter");
-
-            //if button is checked
-            if (darkThemeButton.checked) {
-                body.style.backgroundColor = blackish;
-                header.style.borderColor = modalBackground;
-                title.style.color = whiteish;
-
-                //modal background 
-                modals.forEach(modal => {
-                    modal.style.backgroundColor = modalBackgroundDark;
-                })
-
-                //modal container
-                modalContents.forEach(modal => {
-                    modal.style.backgroundColor = blackish;
-                    modal.style.boxShadow = `0 0 18px black`;
-                })
-
-                //paragraphs
-                paragraph.forEach(p => {
-                    p.style.color = whiteish;
-                })
-
-                //headers
-                headers.forEach(header => {
-                    header.style.color = whiteish;
-                })
-
-                //list
-                list.style.color = whiteish;
-
-                //example tiles
-                examples.forEach(tile => {
-                    tile.style.color = whiteish;
-                    if (tile.classList.contains("not-in-word")) {
-                        tile.classList.remove("not-in-word");
-                        tile.classList.add("dark-mode-not-in-word");
-                    }
-                })
-
-                //icons
-                icons.forEach(icon => {
-                    icon.style.color = whiteish;
-                })
-
-                //keyboard
-                keyButtons.forEach(key => {
-                    if (key.classList.contains("key-not-colored")) {
-                        key.classList.remove("key-not-colored");
-                        key.classList.add("dm-key-not-colored");
-                    } else if (key.classList.contains("not-in-word")) {
-                        key.classList.remove("not-in-word");
-                        key.classList.add("dark-mode-not-in-word");
-                    }
-                })
-
-                //game-tiles
-                gameTiles.forEach(tile => {
-                    if (tile.getAttribute("data") == null) {
-                        tile.classList.remove("empty-tile");
-                        tile.classList.add("dark-mode-empty-tile")
-                    } else {
-                        if (tile.classList.contains("not-in-word")) {
-                            tile.classList.remove("not-in-word");
-                            tile.classList.add("dark-mode-not-in-word");
-                        }
-                    }
-                })
-
-
-            } else {
-                body.style.backgroundColor = "white";
-                header.style.borderColor = lightGray;
-                title.style.color = "black";
-
-                //modal background 
-                modals.forEach(modal => {
-                    modal.style.backgroundColor = modalBackground;
-                })
-
-                //modal container
-                modalContents.forEach(modal => {
-                    modal.style.backgroundColor = "white";
-                    modal.style.boxShadow = `0 0 18px #888`;
-                })
-
-                //paragraphs
-                paragraph.forEach(p => {
-                    p.style.color = "black";
-                })
-
-                //headers
-                headers.forEach(header => {
-                    header.style.color = "black";
-                })
-
-                //list
-                list.style.color = "black";
-
-                //example tiles
-                examples.forEach(tile => {
-                    tile.style.color = "black";
-                    if (tile.classList.contains("dark-mode-not-in-word")) {
-                        tile.classList.remove("dark-mode-not-in-word");
-                        tile.classList.add("not-in-word");
-                    }
-                })
-
-                //icons
-                icons.forEach(icon => {
-                    icon.style.color = "black";
-                })
-
-                //keyboard
-                keyButtons.forEach(key => {
-                    if (key.classList.contains("dm-key-not-colored")) {
-                        key.classList.remove("dm-key-not-colored");
-                        key.classList.add("key-not-colored");
-                    } else if (key.classList.contains("dark-mode-not-in-word")) {
-                        key.classList.remove("dark-mode-not-in-word");
-                        key.classList.add("not-in-word");
-                    }
-                })
-
-                //game-tiles
-                gameTiles.forEach(tile => {
-                    if (tile.getAttribute("data") === null) {
-                        tile.classList.remove("dark-mode-empty-tile");
-                        tile.classList.add("empty-tile");
-                    } else {
-                        if (tile.classList.contains("dark-mode-not-in-word")) {
-                            tile.classList.remove("dark-mode-not-in-word");
-                            tile.classList.add("not-in-word");
-                        }
-                    }
-                })
-
-            }
-        })
-
+        darkThemeButton.addEventListener("change", applyDarkTheme)
         //high contrast button
-        highContrastButton.addEventListener("change", () => {
-            const keyButtons = document.querySelectorAll("button");
-            const gameTiles = document.querySelectorAll(".letter");
-
-            if (highContrastButton.checked) {
-                //change colors
-                highContrastSetColor(keyButtons);
-                highContrastSetColor(examples);
-                highContrastSetColor(gameTiles);
-                highContrastButton.nextElementSibling.style.setProperty('--correct', `${highContrastBackGround}`);
-                darkThemeButton.nextElementSibling.style.setProperty('--correct', `${highContrastBackGround}`);
-                speedrunButton.nextElementSibling.style.setProperty('--correct', `${highContrastBackGround}`);
-            } else {
-                //remove changes
-                highContrastRemoveColor(keyButtons);
-                highContrastRemoveColor(examples);
-                highContrastRemoveColor(gameTiles);
-                highContrastButton.nextElementSibling.style.setProperty('--correct', `${correct}`);
-                darkThemeButton.nextElementSibling.style.setProperty('--correct', `${correct}`);
-                speedrunButton.nextElementSibling.style.setProperty('--correct', `${correct}`);
-            }
-        })
-
-        function highContrastSetColor(elementList) {
-            elementList.forEach(element => {
-                if (element.classList.contains("correct")) {
-                    element.classList.remove("correct");
-                    element.classList.add("high-contrast-correct")
-                } else if (element.classList.contains("clue")) {
-                    element.classList.remove("clue");
-                    element.classList.add("high-contrast-clue");
-                }
-            })
-        }
-
-        function highContrastRemoveColor(elementList) {
-            elementList.forEach(element => {
-                if (element.classList.contains("high-contrast-correct")) {
-                    element.classList.remove("high-contrast-correct");
-                    element.classList.add("correct");
-                } else if (element.classList.contains("high-contrast-clue")) {
-                    element.classList.remove("high-contrast-clue");
-                    element.classList.add("clue");
-                }
-            })
-        }
-
-
+        highContrastButton.addEventListener("change", applyHighContrast);
         //speedrun button
-        speedrunButton.addEventListener("change", () => {
-            if (speedrunButton.checked) {
-                timerContent.style.visibility = "visible";
-            } else {
-                timerContent.style.visibility = "hidden";
-            }
-        })
+        speedrunButton.addEventListener("change", applySpeedrun);
     })
+
+
 
 
 
