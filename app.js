@@ -419,7 +419,10 @@ fetch('./words.json')
                 })
                 //const currentGuessBoxes = document.querySelectorAll(`#row-${currentRow}`).childNodes
                 if (answer === currentGuess) {
-                    clearInterval(timerInterval);
+                    if (currentRow !== 0 && speedrunButton.checked === true) {
+                        clearInterval(timerInterval);
+                    }
+
                     currentGuessBoxes.forEach((guess, guessIndex) => {
                         setTimeout(() => {
                             guess.classList.add("flip");
@@ -471,7 +474,7 @@ fetch('./words.json')
                             }
                             //check if correct guesses used
                             currentGuessBoxes.forEach((guess, guessIndex) => {
-                                if (currentRow != 0) {
+                                if (currentRow !== 0) {
                                     const previous = document.getElementById(`row-${currentRow - 1}-char-${guessIndex}`);
                                     if ((previous.classList.contains("correct") || previous.classList.contains("high-contrast-correct")) && previous.getAttribute("data") != guess.getAttribute("data")) {
                                         isSetMessage = true;
@@ -495,20 +498,23 @@ fetch('./words.json')
                             if (currentRow <= 5) {
                                 setTileColors(currentGuessBoxes);
                                 colorTiles(currentGuessBoxes);
-
-                                //check if game is lost
-                                if (currentRow === 5) {
-                                    clearInterval(timerInterval);
-                                    isGameOver = true;
-                                    showMessage();
-                                    return;
-                                } else {
-                                    setTimeout(() => {
-                                        currentRow += 1;
-                                        currentLetter = 0;
-                                    }, 2500);
-                                }
                             }
+
+                            //check if game is lost
+                            if (currentRow === 5) {
+                                if (speedrunButton.checked) {
+                                    clearInterval(timerInterval);
+                                }
+                                isGameOver = true;
+                                showMessage();
+                                return;
+                            } else {
+                                setTimeout(() => {
+                                    currentRow += 1;
+                                    currentLetter = 0;
+                                }, 2500);
+                            }
+
                         })
                         //if not valid
                         .catch(e => {
@@ -670,7 +676,11 @@ fetch('./words.json')
                 messageContent.style.backgroundColor = whiteish;
                 messageContent.style.color = blackish;
             }
-            setTimeout(() => { alertContainer.removeChild(messageContent) }, 2000);
+            if (messageContent.textContent === answer) {
+                setTimeout(() => { alertContainer.removeChild(messageContent) }, 5000);
+            } else {
+                setTimeout(() => { alertContainer.removeChild(messageContent) }, 3000);
+            }
         }
 
 
