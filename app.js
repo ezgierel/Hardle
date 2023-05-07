@@ -473,7 +473,7 @@ fetch('./words.json')
                             currentGuessBoxes.forEach((guess, guessIndex) => {
                                 if (currentRow != 0) {
                                     const previous = document.getElementById(`row-${currentRow - 1}-char-${guessIndex}`);
-                                    if (previous.classList.contains("correct") && previous.getAttribute("data") != guess.getAttribute("data")) {
+                                    if ((previous.classList.contains("correct") || previous.classList.contains("high-contrast-correct")) && previous.getAttribute("data") != guess.getAttribute("data")) {
                                         isSetMessage = true;
                                     }
                                 } else {
