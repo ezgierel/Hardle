@@ -82,7 +82,6 @@ keys.forEach(key => {
     keyboardButton.id = key;
     keyboardButton.value = key;
     keyboardButton.classList.add("key-not-colored");
-    keyboardButton.addEventListener('click', () => handleClick(key));
     keyboard.append(keyboardButton);
 })
 
@@ -335,18 +334,17 @@ fetch('./words.json')
 
         //screen-keyboard click functions
         function handleClick(key) {
-            var letter = key;
-            if (key != "ENTER" && key != "⌫") {
-                typeLetter(letter);
-            } else if (key === "⌫") {
+            if (key.value != "ENTER" && key.value != "⌫") {
+                typeLetter(key.value);
+            } else if (key.value === "⌫") {
                 deleteLetter();
-            } else if (key === "ENTER") {
+            } else if (key.value === "ENTER") {
                 checkWord();
             }
         }
 
         //keyboard keyup functions
-        document.addEventListener("keyup", handleKeyUp);
+        document.addEventListener("keyup", (evt) => handleKeyUp(evt));
 
         function handleKeyUp(evt) {
             var keyCode = evt.keyCode;
