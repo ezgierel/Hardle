@@ -41,6 +41,7 @@ let currentRow = 0;
 let currentLetter = 0;
 let isGameOver = false;
 let isSetMessage = false;
+let isWordChecked = false;
 
 //-------------------------------------------------------
 
@@ -387,7 +388,7 @@ fetch('./words.json')
         }
 
         function deleteLetter() {
-            if (isGameOver) {
+            if (isGameOver || isWordChecked) {
                 return;
             } else {
                 //if it's the first box, do not get the previous letter
@@ -411,12 +412,13 @@ fetch('./words.json')
         }
 
         function checkWord() {
+            isWordChecked = true;
             const currentGuessBoxes = document.querySelectorAll(`#row-${currentRow} .letter`);
             if (currentLetter === 5) {
                 const currentGuess = guesses[currentRow].join("");
                 currentGuessBoxes.forEach((box) => {
                     box.classList.remove("shake");
-                })
+                });
                 //const currentGuessBoxes = document.querySelectorAll(`#row-${currentRow}`).childNodes
                 if (answer === currentGuess) {
                     if (currentRow !== 0 && speedrunButton.checked === true) {
@@ -509,10 +511,14 @@ fetch('./words.json')
                                 showMessage();
                                 return;
                             } else {
-                                setTimeout(() => {
-                                    currentRow += 1;
-                                    currentLetter = 0;
-                                }, 2500);
+                                //don't skip if current row is empty (fixing row skipping)
+                                if (guesses[currentRow] !== []) {
+                                    setTimeout(() => {
+                                        currentRow += 1;
+                                        currentLetter = 0;
+                                        isWordChecked = false;
+                                    }, 2500);
+                                }
                             }
 
                         })
