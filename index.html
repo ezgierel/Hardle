@@ -36,12 +36,12 @@
             <div id="menu">
                 <span class="material-symbols-outlined" id="help">
                     help
+                </span><span class="material-symbols-outlined" id="stats">
+                    leaderboard
                 </span><span class="material-symbols-outlined" id="settings">
                     settings
                 </span>
-                <!-- <span class="material-symbols-outlined" id="stats">
-                    leaderboard
-                </span> -->
+
             </div>
         </nav>
     </header>
@@ -138,6 +138,36 @@
                     <input type="checkbox" id="speedrun">
                     <span class="slider round"></span>
                 </label>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- stats -->
+
+    <div id="stats-container" class="modal">
+        <div id="stats-content" class="modal-content">
+            <span class="material-symbols-outlined close" id="close-stats-modal">
+                close
+            </span>
+            <h2 class="header">Stats</h2>
+            <div id="stat-info">
+                <div id="played" class="stat-num-container">
+                    <p class="stat-number">0</p>
+                    <p class="stat-title">Played</p>
+                </div>
+                <div id="win" class="stat-num-container">
+                    <p class="stat-number">0</p>
+                    <p class="stat-title">Win %</p>
+                </div>
+                <div id="streak" class="stat-num-container">
+                    <p class="stat-number">0</p>
+                    <p class="stat-title">Current Streak</p>
+                </div>
+                <div id="max-streak" class="stat-num-container">
+                    <p class="stat-number">0</p>
+                    <p class="stat-title">Max Streak</p>
+                </div>
             </div>
         </div>
     </div>

@@ -3,6 +3,8 @@ const gameBoard = document.getElementById("word-board");
 const keyboard = document.getElementById("keyboard-container");
 const helpButton = document.getElementById("help");
 const helpContainer = document.getElementById("help-container");
+const statsButton = document.getElementById("stats");
+const statsContainer = document.getElementById("stats-container");
 const settingButton = document.getElementById("settings");
 const settingContainer = document.getElementById("settings-container");
 const closeButtons = document.querySelectorAll(".close");
@@ -25,6 +27,11 @@ const timerContainer = document.getElementById("timer-container");
 const timerContent = document.getElementById("timer-content");
 const minute = document.getElementById("minute");
 const second = document.getElementById("second");
+const played = document.querySelector("#played > .stat-number");
+const win = document.querySelector("#win > .stat-number");
+const streak = document.querySelector("#streak > .stat-number");
+const maxStreak = document.querySelector("#max-streak > .stat-number");
+
 
 //COLOURS
 let whiteish = "#FAF9F6";
@@ -91,6 +98,10 @@ window.onload = function () {
     let theme = localStorage.getItem("theme");
     let contrast = localStorage.getItem("contrast");
     let speedrun = localStorage.getItem("speedrun");
+    let playedCnt = localStorage.getItem("played");
+    let winPct = localStorage.getItem("winPct");
+    let streakCnt = localStorage.getItem("streak");
+    let maxStreakCnt = localStorage.getItem("maxStreak");
 
     if (contrast === "high") {
         highContrastButton.checked = true;
@@ -105,6 +116,30 @@ window.onload = function () {
     if (speedrun === "on") {
         speedrunButton.checked = true;
         applySpeedrun();
+    }
+
+    if (playedCnt) {
+        played.innerText = playedCnt;
+    } else {
+        played.innerText = "0";
+    }
+
+    if (winPct) {
+        win.innerText = winPct;
+    } else {
+        win.innerText = "0";
+    }
+
+    if (streakCnt) {
+        streak.innerText = streakCnt;
+    } else {
+        streak.innerText = "0";
+    }
+
+    if (maxStreakCnt) {
+        maxStreak.innerText = maxStreakCnt;
+    } else {
+        maxStreak.innerText = "0";
     }
 }
 
@@ -444,9 +479,9 @@ fetch('./words.json')
                             setTimeout(() => {
                                 guess.classList.add("jump");
                             }, 300 * guessIndex)
-
                         })
                     }, 2500);
+                    setStats("won");
                     return;
 
                 } else {
@@ -460,6 +495,7 @@ fetch('./words.json')
                                         isGameOver = true;
                                         showMessage();
                                         clearInterval(timerInterval);
+                                        setStats("lost");
                                         return;
                                     } else {
                                         if (minute.innerText == "01") {
@@ -509,6 +545,7 @@ fetch('./words.json')
                                 }
                                 isGameOver = true;
                                 showMessage();
+                                setStats("lost");
                                 return;
                             } else {
                                 //don't skip if current row is empty (fixing row skipping)
@@ -537,6 +574,43 @@ fetch('./words.json')
                     guess.classList.add("shake");
                 })
                 return;
+            }
+        }
+
+        function setStats(isWon) {
+            played.innerText = parseInt(played.innerText) + 1;
+            localStorage.setItem("played", played.innerText);
+            let winCount = localStorage.getItem("win");
+            let winPct = 0;
+            switch (isWon) {
+                case "won":
+                    if (winCount) {
+                        winCount = parseInt(winCount) + 1;
+                    } else {
+                        winCount = 1;
+                    }
+                    localStorage.setItem("win", winCount);
+                    winPct = winCount * 100 / parseInt(played.innerText);
+                    win.innerText = winPct;
+                    localStorage.setItem("winPct", winPct);
+
+                    if (parseInt(maxStreak.innerText) === parseInt(streak.innerText)) {
+                        maxStreak.innerText = parseInt(maxStreak.innerText) + 1;
+                        localStorage.setItem("maxStreak", maxStreak.innerText);
+                    }
+                    streak.innerText = parseInt(streak.innerText) + 1;
+                    localStorage.setItem("streak", streak.innerText);
+                    break;
+                case "lost":
+                    localStorage.setItem("streak", "0");
+                    streak.innerText = "0";
+                    if (winCount) {
+                        winPct = winCount * 100 / parseInt(played.innerText);
+                    } else {
+                        winPct = 0;
+                    }
+                    win.innerText = winPct;
+                    break;
             }
         }
 
@@ -700,6 +774,11 @@ fetch('./words.json')
             settingContainer.style.display = "block";
         })
 
+        //opening "stats" modal box
+        statsButton.addEventListener("click", () => {
+            statsContainer.style.display = "block";
+        })
+
 
         //-----closing modal boxes----
         //by clicking or touching somewhere else
@@ -711,6 +790,8 @@ fetch('./words.json')
                 helpContainer.style.display = "none";
             } else if (evt.target == settingContainer) {
                 settingContainer.style.display = "none";
+            } else if (evt.target == statsContainer) {
+                statsContainer.style.display = "none";
             }
         }
 
@@ -721,6 +802,8 @@ fetch('./words.json')
                     helpContainer.style.display = "none";
                 } else if (close.id == "close-settings-modal") {
                     settingContainer.style.display = "none";
+                } else if (close.id == "close-stats-modal") {
+                    statsContainer.style.display = "none";
                 }
             })
 
