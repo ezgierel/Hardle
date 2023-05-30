@@ -590,7 +590,7 @@ fetch('./words.json')
                         winCount = 1;
                     }
                     localStorage.setItem("win", winCount);
-                    winPct = winCount * 100 / parseInt(played.innerText);
+                    winPct = Math.floor(winCount * 100 / parseInt(played.innerText));
                     win.innerText = winPct;
                     localStorage.setItem("winPct", winPct);
 
@@ -605,10 +605,11 @@ fetch('./words.json')
                     localStorage.setItem("streak", "0");
                     streak.innerText = "0";
                     if (winCount) {
-                        winPct = winCount * 100 / parseInt(played.innerText);
+                        winPct = Math.floor(winCount * 100 / parseInt(played.innerText));
                     } else {
                         winPct = 0;
                     }
+                    localStorage.setItem("winPct", winPct);
                     win.innerText = winPct;
                     break;
             }
