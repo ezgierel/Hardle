@@ -447,7 +447,6 @@ fetch('./words.json')
         }
 
         function checkWord() {
-            isWordChecked = true;
             const currentGuessBoxes = document.querySelectorAll(`#row-${currentRow} .letter`);
             if (currentLetter === 5) {
                 const currentGuess = guesses[currentRow].join("");
@@ -456,10 +455,10 @@ fetch('./words.json')
                 });
                 //const currentGuessBoxes = document.querySelectorAll(`#row-${currentRow}`).childNodes
                 if (answer === currentGuess) {
+                    isWordChecked = true;
                     if (currentRow !== 0 && speedrunButton.checked === true) {
                         clearInterval(timerInterval);
                     }
-
                     currentGuessBoxes.forEach((guess, guessIndex) => {
                         setTimeout(() => {
                             guess.classList.add("flip");
@@ -489,6 +488,7 @@ fetch('./words.json')
                     checkIfValid()
                         //if valid
                         .then(() => {
+                            isWordChecked = true;
                             if (currentRow === 0 && speedrunButton.checked === true) {
                                 timerInterval = setInterval(() => {
                                     if (minute.innerText == "00" && second.innerText == "00") {
@@ -549,7 +549,7 @@ fetch('./words.json')
                                 return;
                             } else {
                                 //don't skip if current row is empty (fixing row skipping)
-                                if (guesses[currentRow] !== []) {
+                                if (guesses[currentRow][4] !== '') {
                                     setTimeout(() => {
                                         currentRow += 1;
                                         currentLetter = 0;
