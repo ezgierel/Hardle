@@ -31,6 +31,7 @@ const played = document.querySelector("#played > .stat-number");
 const win = document.querySelector("#win > .stat-number");
 const streak = document.querySelector("#streak > .stat-number");
 const maxStreak = document.querySelector("#max-streak > .stat-number");
+const replayButton = document.querySelector("#replay-btn");
 
 
 //COLOURS
@@ -142,6 +143,10 @@ window.onload = function () {
         maxStreak.innerText = "0";
     }
 }
+
+replayButton.addEventListener("click", () => {
+    location.reload();
+})
 
 //SETTING FUNCTIONS
 function applyHighContrast() {
@@ -361,7 +366,6 @@ fetch('./words.json')
         let randomWordIndex = Math.floor(Math.random() * response.length + 1);
         const answer = response[randomWordIndex].word.toUpperCase();
         const keyboardButtons = document.querySelectorAll("button");
-        console.log(answer)
 
         //add event listener to keys
         keyboardButtons.forEach(key => {
@@ -423,7 +427,7 @@ fetch('./words.json')
         }
 
         function deleteLetter() {
-            if (isGameOver || isWordChecked) {
+            if (isGameOver) {
                 return;
             } else {
                 //if it's the first box, do not get the previous letter
@@ -455,7 +459,7 @@ fetch('./words.json')
                 });
                 //const currentGuessBoxes = document.querySelectorAll(`#row-${currentRow}`).childNodes
                 if (answer === currentGuess) {
-                    isWordChecked = true;
+                    isGameOver = true;
                     if (currentRow !== 0 && speedrunButton.checked === true) {
                         clearInterval(timerInterval);
                     }
@@ -472,8 +476,9 @@ fetch('./words.json')
                         }, 400 * guessIndex);
                     })
                     setTimeout(() => {
+                        statsContainer.style.display = "block";
+                        replayButton.style.display = "block";
                         showMessage(currentRow);
-                        isGameOver = true;
                         currentGuessBoxes.forEach((guess, guessIndex) => {
                             setTimeout(() => {
                                 guess.classList.add("jump");
@@ -494,6 +499,10 @@ fetch('./words.json')
                                     if (minute.innerText == "00" && second.innerText == "00") {
                                         isGameOver = true;
                                         showMessage();
+                                        setTimeout(() => {
+                                            statsContainer.style.display = "block";
+                                            replayButton.style.display = "block";
+                                        }, 1000)
                                         clearInterval(timerInterval);
                                         setStats("lost");
                                         return;
@@ -531,6 +540,8 @@ fetch('./words.json')
                                     letter.classList.add("shake");
                                 })
                                 isSetMessage = false;
+                                console.log(isSetMessage);
+                                isWordChecked = "false";
                                 return;
                             }
                             if (currentRow <= 5) {
@@ -546,6 +557,10 @@ fetch('./words.json')
                                 isGameOver = true;
                                 showMessage();
                                 setStats("lost");
+                                setTimeout(() => {
+                                    statsContainer.style.display = "block";
+                                    replayButton.style.display = "block";
+                                }, 2500)
                                 return;
                             } else {
                                 //don't skip if current row is empty (fixing row skipping)
