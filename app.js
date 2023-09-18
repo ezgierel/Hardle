@@ -274,6 +274,9 @@ function setDarkTheme(keyButtons, gameTiles) {
             if (tile.classList.contains("not-in-word")) {
                 tile.classList.remove("not-in-word");
                 tile.classList.add("dark-mode-not-in-word");
+            } else if (tile.classList.contains("typing")) {
+                tile.classList.remove("typing");
+                tile.classList.add("dark-mode-typing");
             }
         }
     })
@@ -343,6 +346,9 @@ function removeDarkTheme(keyButtons, gameTiles) {
             if (tile.classList.contains("dark-mode-not-in-word")) {
                 tile.classList.remove("dark-mode-not-in-word");
                 tile.classList.add("not-in-word");
+            } else if (tile.classList.contains("dark-mode-typing")) {
+                tile.classList.remove("dark-mode-typing");
+                tile.classList.add("typing");
             }
         }
     })
